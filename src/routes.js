@@ -6,8 +6,6 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import SignIn from '~/pages/SignIn';
 import App from '~/drawer/MainDrawer';
 
-// import logo from '~/assets/images/header_logo.png';
-
 export default (Signed = false, Profile = null) =>
   createAppContainer(
     createSwitchNavigator(

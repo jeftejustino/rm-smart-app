@@ -13,5 +13,5 @@ export const Image = styled.Image`
 `;
 
 export const Button = styled.TouchableOpacity`
-  margin-left: 10px;
+  margin-right: 10px;
 `;

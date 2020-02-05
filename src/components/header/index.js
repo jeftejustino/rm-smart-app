@@ -14,7 +14,7 @@ export default function Header({navigation}) {
         <Image source={logo} resizeMode="stretch" />
       </Container>
     ),
-    headerLeft: () => (
+    headerRight: () => (
       <Button
         onPress={() => {
           navigation.toggleDrawer();
@@ -22,7 +22,7 @@ export default function Header({navigation}) {
         <Icon name="menu" size={30} color="#fff" />
       </Button>
     ),
-    headerRight: () => <View />,
+    headerLeft: () => <View />,
     headerStyle: {
       backgroundColor: '#000',
     },
