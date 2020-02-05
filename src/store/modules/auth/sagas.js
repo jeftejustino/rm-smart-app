@@ -10,7 +10,9 @@ export function* SignIn({payload}) {
     // const {userId} = payload;
     // const response = yield call(api.get, `student/${userId}`);
     // const profile = response.data;
-    // yield put(SignInSuccess(profile));
+    yield put(
+      SignInSuccess({name: 'Teste Usuario', email: 'jefte.justino@gmail.comn'}),
+    );
   } catch (error) {
     yield put(SignInFailure());
     Alert.alert(

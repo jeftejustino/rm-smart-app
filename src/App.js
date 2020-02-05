@@ -5,8 +5,10 @@ import createRouter from '~/routes';
 
 export default function App() {
   const signed = useSelector(state => state.auth.signed);
+  const profile = useSelector(state => state.user.profile);
+  console.tron.warn(profile);
 
-  const Routes = createRouter(signed);
+  const Routes = createRouter(signed, profile);
 
   return <Routes />;
 }

@@ -1,19 +1,25 @@
 import React, {useState, useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {Container, Logo, Form, Div} from './styles';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
 
 import logo from '~/assets/images/logo.png';
 
-import Input from '~/components/Input';
-
-import Button from '~/components/Button';
+import {SignInRequest} from '~/store/modules/auth/actions';
 
 export default function SignIn() {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const passRef = useRef();
 
-  function handleSubmit() {}
+  const loading = useSelector(state => state.auth.loading);
+  const dispatch = useDispatch();
+
+  function handleSubmit() {
+    dispatch(SignInRequest({name, pass}));
+  }
 
   return (
     <Container>
@@ -47,7 +53,9 @@ export default function SignIn() {
             returnKeyType="send"
           />
 
-          <Button onPress={() => handleSubmit()}>ENTRAR</Button>
+          <Button onPress={() => handleSubmit()} loading={loading}>
+            ENTRAR
+          </Button>
         </Form>
       </Div>
     </Container>

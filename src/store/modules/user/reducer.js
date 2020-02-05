@@ -2,7 +2,6 @@ import produce from 'immer';
 
 const INITIAL_STATE = {
   profile: {},
-  reloadHelpOrders: false,
 };
 
 export default function auth(state = INITIAL_STATE, action) {
@@ -15,11 +14,6 @@ export default function auth(state = INITIAL_STATE, action) {
 
       case '@auth/SIGN_OUT': {
         draft.profile = false;
-        break;
-      }
-
-      case '@user/RELOAD_HELP_ORDERS': {
-        draft.reloadHelpOrders = action.payload.reload;
         break;
       }
 
