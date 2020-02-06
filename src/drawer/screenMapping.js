@@ -1,9 +1,10 @@
 import {createStackNavigator} from 'react-navigation-stack';
 import Dashboard from '~/pages/Dashboard';
-import People from '~/pages/People';
+import PeopleList from '~/pages/People/List';
+import PeopleForm from '~/pages/People/Form';
 import SingOut from '~/pages/SingOut';
 
-import Header from '~/components/header';
+import Header from '~/components/Header';
 
 export default {
   Dashboard: {
@@ -20,7 +21,8 @@ export default {
   People: {
     screen: createStackNavigator(
       {
-        People,
+        PeopleList,
+        PeopleForm,
       },
       {
         defaultNavigationOptions: Header,

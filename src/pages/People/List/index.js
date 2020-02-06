@@ -27,7 +27,7 @@ import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 
-export default function People() {
+export default function PeopleList({navigation}) {
   const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -178,9 +178,9 @@ export default function People() {
               <ActionButton
                 icon="account-plus"
                 onPress={() => {
-                  console.tron.warn('pressed!');
+                  navigation.navigate('PeopleForm');
                 }}>
-                Pesquisar
+                Adicionar
               </ActionButton>
 
               <ActionButton
@@ -223,7 +223,7 @@ export default function People() {
           </>
         }
         data={people}
-        keyExtractor={item => toString(item.id)}
+        keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
           <Item>
             <ItemHeader>

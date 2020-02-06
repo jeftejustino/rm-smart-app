@@ -27,6 +27,12 @@ export default function Header({navigation}) {
       backgroundColor: '#000',
     },
     headerTitleAlign: 'center',
+    headerRightContainerStyle: {
+      paddingRight: 15,
+    },
+    headerLeftContainerStyle: {
+      paddingLeft: 15,
+    },
     headerTitleContainerStyle: {
       alignItems: 'center',
       justifyContent: 'center',
