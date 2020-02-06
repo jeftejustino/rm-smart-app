@@ -11,21 +11,27 @@ export const Actions = styled.View`
 `;
 
 export const Filter = styled.View`
-  flex-grow: 1;
-  flex-basis: 100%;
+  background: #333;
+  margin: 15px 0px 30px 0px;
+  padding: 25px 20px;
 `;
 
 export const Info = styled.Text`
   font-size: 11px;
   flex-grow: 1;
   flex-basis: 100%;
+  padding: 0px 20px;
+  background: #fff;
 `;
 
-export const List = styled.FlatList``;
+export const List = styled.FlatList`
+  background: #fff;
+`;
 
 export const Item = styled.View`
   border: 1px solid #ccc;
   margin: 15px 20px;
+  background: #fff;
 `;
 
 export const ItemHeader = styled.View`

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import {Animated} from 'react-native';
 import {
   Container,
   Actions,
@@ -25,8 +24,12 @@ import {
 } from './styles';
 
 import ActionButton from '~/components/ActionButton';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
 
 export default function People() {
+  const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
+  const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
@@ -133,6 +136,22 @@ export default function People() {
     },
   ]);
 
+  function ToogleFilter() {
+    if (filterActive) {
+      Animated.timing(filterHeight, {
+        toValue: 0,
+        duration: 500,
+      }).start();
+    } else {
+      Animated.timing(filterHeight, {
+        toValue: 250,
+        duration: 500,
+      }).start();
+    }
+
+    setFilterActive(!filterActive);
+  }
+
   return (
     <Container>
       <List
@@ -145,46 +164,66 @@ export default function People() {
           console.tron.warn('Load More!');
         }}
         ListHeaderComponent={
-          <Actions>
-            <ActionButton
-              icon="magnify"
-              onPress={() => {
-                console.tron.warn('pressed!');
-              }}>
-              Pesquisar
-            </ActionButton>
+          <>
+            <Actions>
+              <ActionButton
+                icon="magnify"
+                active={filterActive}
+                onPress={() => {
+                  ToogleFilter();
+                }}>
+                Pesquisar
+              </ActionButton>
 
-            <ActionButton
-              icon="account-plus"
-              onPress={() => {
-                console.tron.warn('pressed!');
-              }}>
-              Pesquisar
-            </ActionButton>
+              <ActionButton
+                icon="account-plus"
+                onPress={() => {
+                  console.tron.warn('pressed!');
+                }}>
+                Pesquisar
+              </ActionButton>
 
-            <ActionButton
-              icon="filter-outline"
-              onPress={() => {
-                console.tron.warn('pressed!');
-              }}>
-              Últimas Conversões
-            </ActionButton>
+              <ActionButton
+                icon="filter-outline"
+                onPress={() => {
+                  console.tron.warn('pressed!');
+                }}>
+                Últimas Conversões
+              </ActionButton>
 
-            <ActionButton
-              icon="cached"
-              onPress={() => {
-                console.tron.warn('pressed!');
+              <ActionButton
+                icon="cached"
+                onPress={() => {
+                  console.tron.warn('pressed!');
+                }}>
+                Leads Atualizados
+              </ActionButton>
+            </Actions>
+            <Animated.View
+              style={{
+                overflow: 'hidden',
+                height: filterHeight,
+                opacity: filterHeight.interpolate({
+                  inputRange: [0, 50],
+                  outputRange: [0, 1],
+                }),
               }}>
-              Leads Atualizados
-            </ActionButton>
-            <Filter>
-              <Icon />
-            </Filter>
+              <Filter>
+                <Input icon="person" name="name" placeholder="Nome | Empresa" />
+                <Input
+                  icon="email"
+                  name="email"
+                  placeholder="Email da Pessoa"
+                />
+
+                <Button>Buscar</Button>
+              </Filter>
+            </Animated.View>
             <Info>Total de leads únicos: {total}</Info>
-          </Actions>
+          </>
         }
         data={people}
-        keyExtractor={item => item.id}
+        keyExtractor={item => toString(item.id)}
         renderItem={({item}) => (
           <Item>
             <ItemHeader>

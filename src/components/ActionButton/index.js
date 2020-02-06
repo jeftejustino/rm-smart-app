@@ -12,7 +12,7 @@ export default function ActionButton({icon, children, ...rest}) {
         {rest.loading ? (
           <ActivityIndicator color="#000" size="large" />
         ) : (
-          <Icon name={icon} size={32} color={rest.active ? '#f60' : '#666'} />
+          <Icon name={icon} size={30} color={rest.active ? '#f60' : '#777'} />
         )}
       </Button>
       {children && <Title>{children}</Title>}
