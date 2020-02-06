@@ -2,6 +2,8 @@ import {createStackNavigator} from 'react-navigation-stack';
 import Dashboard from '~/pages/Dashboard';
 import PeopleList from '~/pages/People/List';
 import PeopleForm from '~/pages/People/Form';
+import CompanyList from '~/pages/Company/List';
+import CompanyForm from '~/pages/Company/Form';
 import SingOut from '~/pages/SingOut';
 
 import Header from '~/components/Header';
@@ -36,7 +38,8 @@ export default {
   Companies: {
     screen: createStackNavigator(
       {
-        Dashboard,
+        CompanyList,
+        CompanyForm,
       },
       {
         defaultNavigationOptions: Header,
