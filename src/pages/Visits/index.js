@@ -1,54 +1,68 @@
 import React, {useState} from 'react';
 import {Animated} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Container,
   Actions,
   Filter,
-  ItemHeader,
   List,
   Item,
-  ItemContent,
-  ItemInfo,
+  ItemHeader,
   ItemName,
-  ItemDesc,
-  ItemCreated,
+  ItemContent,
+  ItemDate,
+  ItemStart,
+  ItemEnd,
+  ItemPrice,
+  ItemAddress,
 } from './styles';
 
 import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 
-export default function RealTime({navigation}) {
+export default function PeopleList() {
+  const [visitStarted, setVisitStarted] = useState(false);
   const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
-  const [realTime, setRealTime] = useState([
+  const [visits, setVisits] = useState([
     {
       id: 1,
-      name: 'Teste NF',
-      desc: 'Campanha de Email Marketing',
-      action: 'Clickou',
-      time: '2019-09-13 16:34',
-      time_formatted: '13/09/19 às 16:34',
+      name: 'Teste desenvolvimento',
+      price: 120.54,
+      price_formatted: 'R$ 120,54',
+      address:
+        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
+      start_at: '2019-09-13 16:34',
+      start_at_formatted: '13/09/19 16:34',
+      end_at: '2019-09-13 18:10',
+      end_at_formatted: '13/09/19 18:10',
     },
     {
       id: 2,
-      name: 'Teste NF',
-      desc: 'Campanha de Email Marketing',
-      action: 'Clickou',
-      time: '2019-09-13 16:34',
-      time_formatted: '13/09/19 às 16:34',
+      name: 'Teste desenvolvimento',
+      price: 120.54,
+      price_formatted: 'R$ 120,54',
+      address:
+        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
+      start_at: '2019-09-13 16:34',
+      start_at_formatted: '13/09/19 16:34',
+      end_at: '2019-09-13 18:10',
+      end_at_formatted: '13/09/19 18:10',
     },
     {
       id: 3,
-      name: 'Teste NF',
-      desc: 'Email de Aniversario',
-      action: 'Visualizou',
-      time: '2019-09-13 16:34',
-      time_formatted: '13/09/19 às 16:34',
+      name: 'Teste desenvolvimento',
+      price: 120.54,
+      price_formatted: 'R$ 120,54',
+      address:
+        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
+      start_at: '2019-09-13 16:34',
+      start_at_formatted: '13/09/19 16:34',
+      end_at: '2019-09-13 18:10',
+      end_at_formatted: '13/09/19 18:10',
     },
   ]);
 
@@ -66,6 +80,14 @@ export default function RealTime({navigation}) {
     }
 
     setFilterActive(!filterActive);
+  }
+
+  function startVisit() {
+    setVisitStarted(true);
+  }
+
+  function stopVisit() {
+    setVisitStarted(false);
   }
 
   return (
@@ -90,6 +112,24 @@ export default function RealTime({navigation}) {
                 }}>
                 Pesquisar
               </ActionButton>
+
+              {visitStarted ? (
+                <ActionButton
+                  icon="minus"
+                  onPress={() => {
+                    stopVisit();
+                  }}>
+                  Finalizar Visita
+                </ActionButton>
+              ) : (
+                <ActionButton
+                  icon="plus"
+                  onPress={() => {
+                    startVisit();
+                  }}>
+                  Iniciar Visita
+                </ActionButton>
+              )}
             </Actions>
             <Animated.View
               style={{
@@ -111,24 +151,22 @@ export default function RealTime({navigation}) {
                 <Button>Buscar</Button>
               </Filter>
             </Animated.View>
-            <ItemHeader>Atividades Recentes</ItemHeader>
           </>
         }
-        data={realTime}
+        data={visits}
         keyExtractor={item => String(item.id)}
-        renderItem={({item, index}) => (
-          <Item index={index}>
+        renderItem={({item}) => (
+          <Item>
+            <ItemHeader>
+              <ItemName>{item.name}</ItemName>
+            </ItemHeader>
             <ItemContent>
-              <ItemInfo>
-                <ItemName>{item.name}</ItemName>
-                {' | '}
-                <ItemDesc>{item.desc}</ItemDesc>
-              </ItemInfo>
-              <ItemCreated>
-                <Icon name="clock-outline" size={12} color="#333" />
-                {item.action}
-                {item.created_at_formatted}
-              </ItemCreated>
+              <ItemDate>
+                <ItemStart>Inicio: {item.start_at_formatted}</ItemStart>
+                <ItemEnd>Fim: {item.end_at_formatted}</ItemEnd>
+              </ItemDate>
+              <ItemPrice>{item.price_formatted}</ItemPrice>
+              <ItemAddress>{item.address}</ItemAddress>
             </ItemContent>
           </Item>
         )}

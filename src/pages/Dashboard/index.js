@@ -1,12 +1,25 @@
 import React from 'react';
-import {View, Text} from 'react-native';
 
-// import { Container } from './styles';
+import {Container, Chart} from './styles';
+
+import Views from './Views';
+import People from './People';
+import Business from './Business';
 
 export default function Dashboard() {
   return (
-    <View>
-      <Text>Teste Ola</Text>
-    </View>
+    <Container>
+      <Chart>
+        <Views />
+      </Chart>
+
+      <Chart>
+        <People />
+      </Chart>
+
+      <Chart>
+        <Business />
+      </Chart>
+    </Container>
   );
 }

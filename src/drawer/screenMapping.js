@@ -6,6 +6,7 @@ import CompanyList from '~/pages/Company/List';
 import CompanyForm from '~/pages/Company/Form';
 import SingOut from '~/pages/SingOut';
 import RealTime from '~/pages/RealTime';
+import Visits from '~/pages/Visits';
 
 import Header from '~/components/Header';
 
@@ -61,7 +62,7 @@ export default {
       },
     ),
     navigationOptions: {
-      title: 'Em Tempo Real',
+      title: 'Atividades Recentes',
     },
   },
 
@@ -75,14 +76,14 @@ export default {
       },
     ),
     navigationOptions: {
-      title: 'Atividades / Lembretes',
+      title: 'Minhas Atividades',
     },
   },
 
   Visits: {
     screen: createStackNavigator(
       {
-        Dashboard,
+        Visits,
       },
       {
         defaultNavigationOptions: Header,
