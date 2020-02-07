@@ -6,7 +6,8 @@ import CompanyList from '~/pages/Company/List';
 import CompanyForm from '~/pages/Company/Form';
 import SingOut from '~/pages/SingOut';
 import RealTime from '~/pages/RealTime';
-import Visits from '~/pages/Visits';
+import VisitsList from '~/pages/Visits/List';
+import VisitsNew from '~/pages/Visits/New';
 
 import Header from '~/components/Header';
 
@@ -83,7 +84,8 @@ export default {
   Visits: {
     screen: createStackNavigator(
       {
-        Visits,
+        VisitsList,
+        VisitsNew,
       },
       {
         defaultNavigationOptions: Header,

@@ -20,8 +20,7 @@ import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 
-export default function PeopleList() {
-  const [visitStarted, setVisitStarted] = useState(false);
+export default function PeopleList({navigation}) {
   const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -82,14 +81,6 @@ export default function PeopleList() {
     setFilterActive(!filterActive);
   }
 
-  function startVisit() {
-    setVisitStarted(true);
-  }
-
-  function stopVisit() {
-    setVisitStarted(false);
-  }
-
   return (
     <Container>
       <List
@@ -113,23 +104,15 @@ export default function PeopleList() {
                 Pesquisar
               </ActionButton>
 
-              {visitStarted ? (
-                <ActionButton
-                  icon="minus"
-                  onPress={() => {
-                    stopVisit();
-                  }}>
-                  Finalizar Visita
-                </ActionButton>
-              ) : (
-                <ActionButton
-                  icon="plus"
-                  onPress={() => {
-                    startVisit();
-                  }}>
-                  Iniciar Visita
-                </ActionButton>
-              )}
+              <ActionButton
+                icon="plus"
+                bgColor="#0b0"
+                iconColor="#fff"
+                onPress={() => {
+                  navigation.navigate('VisitsNew');
+                }}>
+                Iniciar Visita
+              </ActionButton>
             </Actions>
             <Animated.View
               style={{

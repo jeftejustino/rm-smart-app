@@ -4,8 +4,7 @@ import {RectButton} from 'react-native-gesture-handler';
 export const Container = styled.View``;
 
 export const Button = styled(RectButton)`
-  background: ${props =>
-    props.active ? props.backgroundColorActive : props.backgroundColor};
+  background: ${props => (props.active ? props.bgColorActive : props.bgColor)};
   border-radius: 30px;
   width: 60px;
   height: 60px;

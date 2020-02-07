@@ -7,8 +7,6 @@ import {Container, Button, Title} from './styles';
 
 export default function ActionButton({
   icon,
-  backgroundColor,
-  backgroundColorActive,
   iconColor,
   iconColorActive,
   children,
@@ -16,10 +14,7 @@ export default function ActionButton({
 }) {
   return (
     <Container>
-      <Button
-        backgroundColor={backgroundColor}
-        backgroundColorActive={backgroundColorActive}
-        {...rest}>
+      <Button {...rest}>
         {rest.loading ? (
           <ActivityIndicator color="#000" size="large" />
         ) : (
@@ -38,16 +33,16 @@ export default function ActionButton({
 ActionButton.propTypes = {
   icon: PropTypes.string.isRequired,
   children: PropTypes.string,
-  backgroundColor: PropTypes.string,
-  backgroundColorActive: PropTypes.string,
-  iconColor: PropTypes.string,
+  bgColorActive: PropTypes.string,
   iconColorActive: PropTypes.string,
+  bgColor: PropTypes.string,
+  iconColor: PropTypes.string,
 };
 
 ActionButton.defaultProps = {
   children: '',
-  backgroundColor: '#e7e7e7',
-  iconColor: '#777',
-  backgroundColorActive: '#000000',
+  bgColorActive: '#000000',
   iconColorActive: '#f60',
+  bgColor: '#e7e7e7',
+  iconColor: '#777',
 };

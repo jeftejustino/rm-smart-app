@@ -7,7 +7,6 @@ import {Container, Image, Button} from './styles';
 import logo from '~/assets/images/logo.png';
 
 export default function Header({navigation}) {
-  console.tron.warn('qwerty');
   return {
     headerTitle: () => (
       <Container>
