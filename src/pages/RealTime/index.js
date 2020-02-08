@@ -71,14 +71,10 @@ export default function RealTime({navigation}) {
   return (
     <Container>
       <List
-        onRefresh={() => {
-          console.tron.warn('Refresh!');
-        }}
+        onRefresh={() => {}}
         refreshing={refreshing}
         onEndReachedThreshold={0.4}
-        onEndReached={() => {
-          console.tron.warn('Load More!');
-        }}
+        onEndReached={() => {}}
         ListHeaderComponent={
           <>
             <Actions>

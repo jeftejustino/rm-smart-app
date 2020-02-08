@@ -28,13 +28,11 @@ function* requestPermissionLocation() {
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.tron.log('You can use the location');
+      // teste
     } else {
-      console.tron.log('Location permission denied');
+      // teste
     }
-  } catch (err) {
-    console.tron.warn(err);
-  }
+  } catch (err) {}
 }
 
 export function* StartVisit({payload}) {
@@ -42,13 +40,9 @@ export function* StartVisit({payload}) {
 
   try {
     Geolocation.getCurrentPosition(
-      position => {
-        console.tron.log(position);
-      },
+      position => {},
       error => {
         // See error code charts below.
-        console.tron.log(error.code);
-        console.tron.log(error.message);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -65,7 +59,6 @@ export function* StartVisit({payload}) {
     NavigationService.navigate('VisitsStarted');
   } catch (error) {
     yield put(StartVisitFailure());
-    console.tron.error(error);
     Alert.alert(
       'Falha ao Iniciar Visita',
       'ocorreu um erro, tente novamente mais tarde!',
@@ -78,13 +71,9 @@ export function* StopVisit({payload}) {
 
   try {
     Geolocation.getCurrentPosition(
-      position => {
-        console.tron.log(position);
-      },
+      position => {},
       error => {
         // See error code charts below.
-        console.tron.log(error.code);
-        console.tron.log(error.message);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -94,7 +83,6 @@ export function* StopVisit({payload}) {
     NavigationService.navigate('VisitsList');
   } catch (error) {
     yield put(StopVisitFailure());
-    console.tron.error(error);
     Alert.alert(
       'Falha ao Parar Visita',
       'ocorreu um erro, tente novamente mais tarde!',

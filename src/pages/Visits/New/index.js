@@ -43,9 +43,7 @@ export default function ListNew() {
   return (
     <Container>
       <List
-        onRefresh={() => {
-          console.tron.warn('Refresh!');
-        }}
+        onRefresh={() => {}}
         refreshing={refreshing}
         ListHeaderComponent={
           <>

@@ -64,13 +64,11 @@ export default function PeopleForm() {
 
   function toggleGroupPessoal() {
     if (pessoalActive) {
-      console.tron.warn(pessoalHeight);
       Animated.timing(pessoalHeight, {
         toValue: 0,
         duration: 500,
       }).start();
     } else {
-      console.tron.warn(pessoalHeight);
       Animated.timing(pessoalHeight, {
         toValue: 565,
         duration: 500,
@@ -82,13 +80,11 @@ export default function PeopleForm() {
 
   function toggleGroupEndereco() {
     if (enderecoActive) {
-      console.tron.warn(enderecoHeight);
       Animated.timing(enderecoHeight, {
         toValue: 0,
         duration: 500,
       }).start();
     } else {
-      console.tron.warn(enderecoHeight);
       Animated.timing(enderecoHeight, {
         toValue: 509,
         duration: 500,
@@ -100,13 +96,11 @@ export default function PeopleForm() {
 
   function toggleGroupSocial() {
     if (socialActive) {
-      console.tron.warn(socialHeight);
       Animated.timing(socialHeight, {
         toValue: 0,
         duration: 500,
       }).start();
     } else {
-      console.tron.warn(socialHeight);
       Animated.timing(socialHeight, {
         toValue: 254,
         duration: 500,
