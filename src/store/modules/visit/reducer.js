@@ -2,7 +2,7 @@ import produce from 'immer';
 
 const INITIAL_STATE = {
   loading: false,
-  visit_started_at: null,
+  visit_started: false,
   visit: false,
 };
 
@@ -13,13 +13,30 @@ export default function visit(state = INITIAL_STATE, action) {
         draft.loading = true;
         break;
       }
-      case '@auth/START_VISIT_SUCCESS': {
+      case '@visit/START_VISIT_SUCCESS': {
         draft.loading = false;
         draft.visit = action.payload.visit;
-        draft.visit_started_at = action.payload.visit_started_at;
+        draft.visit_started = true;
         break;
       }
-      case '@auth/START_VISIT_FAILURE': {
+      case '@visit/START_VISIT_FAILURE': {
+        draft.loading = false;
+        break;
+      }
+
+      case '@visit/STOP_VISIT_REQUEST': {
+        draft.loading = true;
+        break;
+      }
+
+      case '@visit/STOP_VISIT_SUCCESS': {
+        draft.loading = false;
+        draft.visit = null;
+        draft.visit_started = false;
+        break;
+      }
+
+      case '@visit/STOP_VISIT_FAILURE': {
         draft.loading = false;
         break;
       }

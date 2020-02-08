@@ -7,13 +7,31 @@ export function StartVisitRequest(visit) {
 
 export function StartVisitSuccess(visit) {
   return {
-    type: '@auth/START_VISIT_SUCCESS',
+    type: '@visit/START_VISIT_SUCCESS',
     payload: {visit},
   };
 }
 
 export function StartVisitFailure() {
   return {
-    type: '@auth/START_VISIT_FAILURE',
+    type: '@visit/START_VISIT_FAILURE',
+  };
+}
+
+export function StopVisitRequest() {
+  return {
+    type: '@visit/STOP_VISIT_REQUEST',
+  };
+}
+
+export function StopVisitSuccess() {
+  return {
+    type: '@visit/STOP_VISIT_SUCCESS',
+  };
+}
+
+export function StopVisitFailure() {
+  return {
+    type: '@visit/STOP_VISIT_FAILURE',
   };
 }

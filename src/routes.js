@@ -6,12 +6,12 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import SignIn from '~/pages/SignIn';
 import App from '~/drawer/MainDrawer';
 
-export default (Signed = false, Profile = null) =>
+export default (Signed = false, Profile = null, Visit = null) =>
   createAppContainer(
     createSwitchNavigator(
       {
         SignIn,
-        App: App(Profile),
+        App: App(Profile, Visit),
       },
       {
         initialRouteName: Signed ? 'App' : 'SignIn',

@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Animated} from 'react-native';
+import {useSelector} from 'react-redux';
+
 import {
   Container,
   Actions,
@@ -64,6 +66,11 @@ export default function PeopleList({navigation}) {
       end_at_formatted: '13/09/19 18:10',
     },
   ]);
+  const visit_started = useSelector(state => state.visit.visit_started);
+
+  if (visit_started) {
+    navigation.navigate('VisitsStarted');
+  }
 
   function ToogleFilter() {
     if (filterActive) {

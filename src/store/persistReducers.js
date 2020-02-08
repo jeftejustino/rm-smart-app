@@ -4,9 +4,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default reducers => {
   const persistedReducer = persistReducer(
     {
-      key: 'gympoint',
+      key: 'rmsmart',
       storage: AsyncStorage,
-      whitelist: ['auth', 'user'],
+      whitelist: ['auth', 'user', 'visit'],
     },
     reducers,
   );

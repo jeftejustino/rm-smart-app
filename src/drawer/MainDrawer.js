@@ -24,9 +24,11 @@ export default function App(profile) {
     </View>
   );
 
+  // conrrst mapping = screenMapping(visit);
+
   return createDrawerNavigator(
     {
-      ...screenMapping,
+      ...screenMapping(),
     },
     {
       contentComponent: DrawerContent,
