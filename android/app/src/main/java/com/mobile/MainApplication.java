@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
@@ -22,6 +23,11 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
+        }
+        
+        @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
         }
 
         @Override

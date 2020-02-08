@@ -34,15 +34,13 @@ target 'mobile' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
-  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
-  pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
-  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
   target 'mobileTests' do
     inherit! :search_paths

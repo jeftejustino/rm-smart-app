@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.1, 0.99.99]'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
@@ -152,9 +163,22 @@ android {
     }
     buildTypes {
         debug {
+
+            resValue "string", "CodePushDeploymentKey", '""'
+
             signingConfig signingConfigs.debug
         }
+
+        reselaseStanging {
+            resValue "string", "CodePushDeploymentKey", '"59dhw1BEFS73VQ0dIk9UBN5u134XjSu6HoW0D"'
+
+            matchingFallbacks = ['debug', 'release']
+        }
+
         release {
+
+            resValue "string", "CodePushDeploymentKey", '"tcy2IBFJ7glmICFSEpeFpAzPpV1Hrzs3Cts9m"'
+
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.debug
@@ -179,6 +203,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-code-push')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-safe-area-context')
     implementation project(':react-native-screens')
@@ -210,4 +235,6 @@ project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'MaterialCommunityIcons.ttf' ] // Name of the font files you want to copy
 ]
 
+apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

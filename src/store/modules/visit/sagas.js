@@ -38,7 +38,7 @@ function* requestPermissionLocation() {
 }
 
 export function* StartVisit({payload}) {
-  requestPermissionLocation();
+  yield requestPermissionLocation();
 
   try {
     Geolocation.getCurrentPosition(
