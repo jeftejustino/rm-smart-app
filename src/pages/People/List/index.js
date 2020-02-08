@@ -155,14 +155,10 @@ export default function PeopleList({navigation}) {
   return (
     <Container>
       <List
-        onRefresh={() => {
-          console.tron.warn('Refresh!');
-        }}
+        onRefresh={() => {}}
         refreshing={refreshing}
         onEndReachedThreshold={0.4}
-        onEndReached={() => {
-          console.tron.warn('Load More!');
-        }}
+        onEndReached={() => {}}
         ListHeaderComponent={
           <>
             <Actions>
@@ -183,19 +179,11 @@ export default function PeopleList({navigation}) {
                 Adicionar
               </ActionButton>
 
-              <ActionButton
-                icon="filter-outline"
-                onPress={() => {
-                  console.tron.warn('pressed!');
-                }}>
+              <ActionButton icon="filter-outline" onPress={() => {}}>
                 Últimas Conversões
               </ActionButton>
 
-              <ActionButton
-                icon="cached"
-                onPress={() => {
-                  console.tron.warn('pressed!');
-                }}>
+              <ActionButton icon="cached" onPress={() => {}}>
                 Leads Atualizados
               </ActionButton>
             </Actions>
