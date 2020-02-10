@@ -36,7 +36,7 @@ export default function PeopleList({navigation}) {
   const [people, setPeople] = useState([
     {
       id: 1,
-      name: 'Teste NF',
+      name: 'Teste NFS',
       conversions: 15,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
@@ -46,8 +46,8 @@ export default function PeopleList({navigation}) {
     },
     {
       id: 2,
-      name: 'Teste NF',
-      conversions: 15,
+      name: 'Teste BCS',
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -56,8 +56,8 @@ export default function PeopleList({navigation}) {
     },
     {
       id: 3,
-      name: 'Teste NF',
-      conversions: 15,
+      name: 'Teste QWS',
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -67,7 +67,7 @@ export default function PeopleList({navigation}) {
     {
       id: 4,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -77,7 +77,7 @@ export default function PeopleList({navigation}) {
     {
       id: 5,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -87,7 +87,7 @@ export default function PeopleList({navigation}) {
     {
       id: 6,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -97,7 +97,7 @@ export default function PeopleList({navigation}) {
     {
       id: 7,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -107,7 +107,7 @@ export default function PeopleList({navigation}) {
     {
       id: 8,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -117,7 +117,7 @@ export default function PeopleList({navigation}) {
     {
       id: 9,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
@@ -127,7 +127,7 @@ export default function PeopleList({navigation}) {
     {
       id: 10,
       name: 'Teste NF',
-      conversions: 15,
+      conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
       responsible: '--Teste Desenvolvimento',
