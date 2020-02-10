@@ -3,14 +3,14 @@ import '~/config/ReactotronConfig';
 import {StatusBar} from 'react-native';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
-// import CodePush from 'react-native-code-push';
+import CodePush from 'react-native-code-push';
 import OneSignal from 'react-native-onesignal';
 
 import {store, persistor} from '~/store';
 
 import App from '~/App';
 
-export default class Index extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -44,6 +44,6 @@ export default class Index extends Component {
   }
 }
 
-// export default CodePush({
-//   checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
-// })(Index);
+export default CodePush({
+  checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
+})(Index);
