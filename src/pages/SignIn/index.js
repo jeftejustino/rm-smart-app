@@ -10,15 +10,15 @@ import logo from '~/assets/images/logo.png';
 import {SignInRequest} from '~/store/modules/auth/actions';
 
 export default function SignIn() {
-  const [name, setName] = useState('');
-  const [pass, setPass] = useState('');
-  const passRef = useRef();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const passwordRef = useRef();
 
   const loading = useSelector(state => state.auth.loading);
   const dispatch = useDispatch();
 
   function handleSubmit() {
-    dispatch(SignInRequest({name, pass}));
+    dispatch(SignInRequest({email, password}));
   }
 
   return (
@@ -27,28 +27,26 @@ export default function SignIn() {
       <Div>
         <Form>
           <Input
-            name="email"
             icon="person"
             keyboardType="email-address"
             placeholder="Seu Email"
             autoCompleteType="email"
             style={{marginBottom: 40}}
-            value={name}
+            value={email}
             autoCorrect={false}
-            onChangeText={setName}
-            onSubmitEditing={() => passRef.current.focus()}
+            onChangeText={setEmail}
+            onSubmitEditing={() => passwordRef.current.focus()}
             returnKeyType="next"
           />
           <Input
-            name="senha"
             icon="https"
             autoCorrect={false}
             secureTextEntry
             placeholder="Sua Senha"
             style={{marginBottom: 40}}
-            value={pass}
-            onChangeText={setPass}
-            ref={passRef}
+            value={password}
+            onChangeText={setPassword}
+            ref={passwordRef}
             onSubmitEditing={() => handleSubmit()}
             returnKeyType="send"
           />

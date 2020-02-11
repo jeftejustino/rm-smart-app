@@ -36,7 +36,7 @@ export default function PeopleList({navigation}) {
   const [people, setPeople] = useState([
     {
       id: 1,
-      name: 'Teste NFS',
+      name: 'Teste NFz',
       conversions: 15,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
@@ -46,7 +46,7 @@ export default function PeopleList({navigation}) {
     },
     {
       id: 2,
-      name: 'Teste BCS',
+      name: 'Teste BCw',
       conversions: 22,
       updated_at: '2019-09-13 16:34',
       updated_at_formatted: '13/09/19 16:34',
