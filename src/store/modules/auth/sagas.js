@@ -17,9 +17,9 @@ export function* SignIn({payload}) {
       password,
     });
     const profile = response.data;
-    const {token, userId, gerenciador} = profile;
+    const {token, id, gerenciador} = profile;
     api.defaults.headers.common.Rmtoken = token;
-    api.defaults.headers.common.Userid = userId;
+    api.defaults.headers.common.Userid = id;
     api.defaults.headers.common.Gerenciador = gerenciador;
 
     yield put(SignInSuccess(profile));

@@ -18,7 +18,7 @@ export default function App(profile) {
           flexDirection: 'row',
         }}>
         <Icon name="person" size={20} color="#fff" />
-        <Text style={{color: 'white', fontSize: 16}}> Olá, {profile.name}</Text>
+        <Text style={{color: 'white', fontSize: 16}}> Olá, {profile.nome}</Text>
       </View>
       <DrawerItems {...props} />
     </View>

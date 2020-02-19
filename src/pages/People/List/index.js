@@ -1,140 +1,82 @@
-import React, {useState} from 'react';
-import {Animated} from 'react-native';
-import {
-  Container,
-  Actions,
-  Filter,
-  Info,
-  List,
-  Item,
-  ItemHeader,
-  ItemName,
-  ItemContent,
-  ItemRank,
-  ItemRankText,
-  ItemConversions,
-  ItemConversionsTitle,
-  ItemConversionsValue,
-  ItemUpdated,
-  ItemUpdatedTitle,
-  ItemUpdatedValue,
-  ItemResponsible,
-  ItemResponsibleTitle,
-  ItemResponsibleValue,
-} from './styles';
+import React, {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
+import {Animated, Alert, ActivityIndicator} from 'react-native';
+import {format, parseISO} from 'date-fns';
+import {Container, Actions, Filter, Info, List, Item} from './styles';
 
 import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
+import api from '~/services/api';
+
+import ItemList from './item';
 
 export default function PeopleList({navigation}) {
-  const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
+  const [filterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
-  const [people, setPeople] = useState([
-    {
-      id: 1,
-      name: 'Teste NFz',
-      conversions: 15,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'A',
-      rankColor: '#ff781f',
-    },
-    {
-      id: 2,
-      name: 'Teste BCw',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'B',
-      rankColor: '#34A853',
-    },
-    {
-      id: 3,
-      name: 'Teste QWS',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'C',
-      rankColor: '#4285F4',
-    },
-    {
-      id: 4,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'D',
-      rankColor: '#A1DCEF',
-    },
-    {
-      id: 5,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'E',
-      rankColor: null,
-    },
-    {
-      id: 6,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'A',
-      rankColor: '#ff781f',
-    },
-    {
-      id: 7,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'B',
-      rankColor: '#34A853',
-    },
-    {
-      id: 8,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'C',
-      rankColor: '#4285F4',
-    },
-    {
-      id: 9,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'D',
-      rankColor: '#A1DCEF',
-    },
-    {
-      id: 10,
-      name: 'Teste NF',
-      conversions: 22,
-      updated_at: '2019-09-13 16:34',
-      updated_at_formatted: '13/09/19 16:34',
-      responsible: '--Teste Desenvolvimento',
-      rank: 'E',
-      rankColor: null,
-    },
-  ]);
+  const [people, setPeople] = useState([]);
+  const max = 8;
+  const RankColor = {
+    A: '#ff781f',
+    B: '#34A853',
+    C: '#4285F4',
+    D: '#A1DCEF',
+    E: null,
+  };
+  const [filterName, setFilterName] = useState('');
+  const [filterEmail, setFilterEmail] = useState('');
+
+  async function getData() {
+    if (loadingMore) return false;
+    if (people.length >= total && total !== 0 && !refreshing) return false;
+    setLoadingMore(true);
+    try {
+      const response = await api.get('pessoas', {
+        params: {
+          start: people.length,
+          max,
+          nome: filterName,
+          email: filterEmail,
+        },
+      });
+      setTotal(response.headers.total);
+
+      const data = response.data.map(item => ({
+        ...item,
+        rankColor: RankColor[item.rank],
+        updated_at_formatted: format(
+          parseISO(item.updated_at),
+          "dd/LL/Y 'às' HH:mm",
+        ),
+      }));
+
+      setPeople([...people, ...data]);
+    } catch (error) {
+      Alert.alert('Falha ao carregar!');
+    } finally {
+      setLoadingMore(false);
+      setRefreshing(false);
+    }
+    return true;
+  }
+
+  async function refreshData() {
+    setRefreshing(true);
+
+    setTotal(0);
+    setPeople([]);
+
+    await getData();
+
+    setRefreshing(false);
+  }
+
+  async function loadMore() {
+    await getData();
+  }
 
   function ToogleFilter() {
     if (filterActive) {
@@ -152,13 +94,22 @@ export default function PeopleList({navigation}) {
     setFilterActive(!filterActive);
   }
 
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Container>
       <List
-        onRefresh={() => {}}
+        onRefresh={() => {
+          refreshData();
+        }}
         refreshing={refreshing}
-        onEndReachedThreshold={0.4}
-        onEndReached={() => {}}
+        onEndReachedThreshold={0.2}
+        onEndReached={() => {
+          loadMore();
+        }}
         ListHeaderComponent={
           <>
             <Actions>
@@ -174,6 +125,7 @@ export default function PeopleList({navigation}) {
               <ActionButton
                 icon="account-plus"
                 onPress={() => {
+                  // eslint-disable-next-line react/prop-types
                   navigation.navigate('PeopleForm');
                 }}>
                 Adicionar
@@ -183,7 +135,11 @@ export default function PeopleList({navigation}) {
                 Últimas Conversões
               </ActionButton>
 
-              <ActionButton icon="cached" onPress={() => {}}>
+              <ActionButton
+                icon="cached"
+                onPress={() => {
+                  refreshData();
+                }}>
                 Leads Atualizados
               </ActionButton>
             </Actions>
@@ -197,52 +153,52 @@ export default function PeopleList({navigation}) {
                 }),
               }}>
               <Filter>
-                <Input icon="person" name="name" placeholder="Nome | Empresa" />
+                <Input
+                  icon="person"
+                  placeholder="Nome | Empresa"
+                  value={filterName}
+                  onChangeText={setFilterName}
+                />
                 <Input
                   icon="email"
-                  name="email"
                   placeholder="Email da Pessoa"
+                  value={filterEmail}
+                  onChangeText={setFilterEmail}
                 />
 
-                <Button>Buscar</Button>
+                <Button
+                  onPress={() => {
+                    refreshData();
+                  }}>
+                  Buscar
+                </Button>
               </Filter>
             </Animated.View>
             <Info>Total de leads únicos: {total}</Info>
           </>
         }
+        ListFooterComponent={
+          <>
+            {loadingMore && (
+              <ActivityIndicator color="#f60" style={{padding: 20}} />
+            )}
+          </>
+        }
         data={people}
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
-          <Item>
-            <ItemHeader>
-              <ItemName>{item.name}</ItemName>
-            </ItemHeader>
-
-            <ItemContent>
-              <ItemRank rankColor={item.rankColor}>
-                <ItemRankText rankColor={item.rankColor}>
-                  {item.rank}
-                </ItemRankText>
-              </ItemRank>
-
-              <ItemConversions>
-                <ItemConversionsTitle>Conversões</ItemConversionsTitle>
-                <ItemConversionsValue>{item.conversions}</ItemConversionsValue>
-              </ItemConversions>
-
-              <ItemUpdated>
-                <ItemUpdatedTitle>Atualizado</ItemUpdatedTitle>
-                <ItemUpdatedValue>{item.updated_at_formatted}</ItemUpdatedValue>
-              </ItemUpdated>
-
-              <ItemResponsible>
-                <ItemResponsibleTitle>Dono do Lead</ItemResponsibleTitle>
-                <ItemResponsibleValue>{item.responsible}</ItemResponsibleValue>
-              </ItemResponsible>
-            </ItemContent>
+          <Item
+            onPress={() => {
+              navigation.navigate('PeopleForm', {itemId: item.id});
+            }}>
+            <ItemList key={item.id} item={item} />
           </Item>
         )}
       />
     </Container>
   );
 }
+
+PeopleList.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

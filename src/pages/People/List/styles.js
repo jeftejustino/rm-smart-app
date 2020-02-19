@@ -28,7 +28,7 @@ export const List = styled.FlatList`
   background: #fff;
 `;
 
-export const Item = styled.View`
+export const Item = styled.TouchableOpacity`
   border: 1px solid #ccc;
   margin: 15px 20px;
   background: #fff;
@@ -120,4 +120,5 @@ export const ItemResponsibleTitle = styled.Text`
 
 export const ItemResponsibleValue = styled.Text.attrs({numberOfLines: 1})`
   font-size: 10px;
+  width: 80px;
 `;
