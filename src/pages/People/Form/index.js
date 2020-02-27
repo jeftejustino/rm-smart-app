@@ -23,6 +23,48 @@ export default function PeopleForm() {
   const [enderecoActive, setEnderecoActive] = useState(false);
   const [socialHeight] = useState(new Animated.Value(0));
   const [socialActive, setSocialActive] = useState(false);
+  const [dataForm, setDataForm] = useState({
+    nome: '',
+    email: '',
+    telefone1: '',
+    telefone2: '',
+    empresa: '',
+    cargo: '',
+    origem: 1,
+    vend_id: 0,
+    msg: '',
+    cep: '',
+    endereco: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    cidade: '',
+    estado: '',
+    observacoes: '',
+    facebook: '',
+    instagram: '',
+    linkedin: '',
+    youtube: '',
+  });
+
+  const [responsible, setResponsible] = useState([
+    {
+      value: 0,
+      label: 'Escolher Vendedor',
+    },
+    {
+      value: 1,
+      label: 'Nome Vendedor 2',
+    },
+    {
+      value: 2,
+      label: 'Nome Vendedor 3',
+    },
+    {
+      value: 3,
+      label: 'Nome Vendedor 4',
+    },
+  ]);
 
   const reference = [
     {
@@ -72,25 +114,6 @@ export default function PeopleForm() {
     {
       value: 12,
       label: 'Feira/Eventos',
-    },
-  ];
-
-  const responsible = [
-    {
-      value: 0,
-      label: 'Escolher Vendedor',
-    },
-    {
-      value: 1,
-      label: 'Nome Vendedor 2',
-    },
-    {
-      value: 2,
-      label: 'Nome Vendedor 3',
-    },
-    {
-      value: 3,
-      label: 'Nome Vendedor 4',
     },
   ];
 
