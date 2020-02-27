@@ -1,4 +1,4 @@
-package com.mobile;
+package br.com.rmsmart;
 
 import android.app.Application;
 import android.content.Context;
