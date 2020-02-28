@@ -125,7 +125,7 @@ export default function PeopleForm() {
       }).start();
     } else {
       Animated.timing(pessoalHeight, {
-        toValue: 565,
+        toValue: 465,
         duration: 500,
       }).start();
     }
@@ -165,6 +165,8 @@ export default function PeopleForm() {
     setSocialActive(!socialActive);
   }
 
+  function submitForm() {}
+
   return (
     <Container>
       <Groups>
@@ -189,7 +191,6 @@ export default function PeopleForm() {
               <Input placeholder="Cargo" />
               <Select options={reference} />
               <Select options={responsible} />
-              <InputTextArea placeholder="Solicitação do Cliente" />
             </GroupContent>
           </Animated.View>
         </Group>
@@ -240,7 +241,9 @@ export default function PeopleForm() {
           </Animated.View>
         </Group>
 
-        <Button style={{marginTop: 30}}>Salvar</Button>
+        <Button style={{marginTop: 30}} onPress={() => submitForm()}>
+          Salvar
+        </Button>
       </Groups>
     </Container>
   );
