@@ -30,7 +30,7 @@ export const List = styled.FlatList`
   background: #fff;
 `;
 
-export const Item = styled.View`
+export const Item = styled.TouchableOpacity`
   border: 1px solid #ccc;
   border-top-width: 0;
   margin: 0px 20px;
