@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   background: #fff;
   margin: 8px 0px;
-  padding: 0px 10px;
+  padding: 0px 15px;
   height: 40px;
 `;
 
@@ -49,10 +49,16 @@ export const CloseModalText = styled.Text`
 export const Label = styled.Text`
   height: 40px;
   color: #000;
-  padding: 10px 0px;
+  padding: 0px;
+  line-height: 40px;
+  font-size: 15px;
 `;
 
-export const Item = styled.View``;
+export const Item = styled.TouchableOpacity`
+  padding: 10px 15px;
+  border-bottom-width: 1px;
+  border-bottom-color: #ccc;
+`;
 
 export const ItemText = styled.Text`
   height: 40px;

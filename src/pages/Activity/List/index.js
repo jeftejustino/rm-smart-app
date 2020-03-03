@@ -41,14 +41,14 @@ export default function ActivityList({navigation}) {
   const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
 
-  async function getData() {
+  async function getData(refresh) {
     if (loadingMore) return false;
-    if (activities.length >= total && total !== 0 && !refreshing) return false;
+    if (activities.length >= total && total !== 0 && !refresh) return false;
     setLoadingMore(true);
     try {
       const response = await api.get('atividades', {
         params: {
-          start: activities.length,
+          start: refresh ? 0 : activities.length,
           max,
           nome: filterName,
           email: filterEmail,
@@ -65,16 +65,26 @@ export default function ActivityList({navigation}) {
           start: parseISO(item.cadastro),
           end: itemData,
         };
+        let dias = 0;
+        try {
+          const interv = eachDayOfInterval(interval);
+          dias = interv.length;
+        } catch (error) {
+          // console.tron.warn(interval);
+        }
 
         return {
           ...item,
-          dias: eachDayOfInterval(interval),
+          dias,
           data_ini: format(parseISO(item.cadastro), "dd/LL/Y 'às' HH:mm"),
           data_fim: format(itemData, "dd/LL/Y 'às' HH:mm"),
         };
       });
-
-      setActivities([...activities, ...data]);
+      if (refresh) {
+        setActivities(data);
+      } else {
+        setActivities([...activities, ...data]);
+      }
     } catch (error) {
       Alert.alert('Falha ao carregar!');
     } finally {
@@ -87,10 +97,7 @@ export default function ActivityList({navigation}) {
   async function refreshData() {
     setRefreshing(true);
 
-    setTotal(0);
-    setActivities([]);
-
-    await getData();
+    getData(true);
 
     setRefreshing(false);
   }
@@ -190,13 +197,13 @@ export default function ActivityList({navigation}) {
           <Item
             index={index}
             onPress={() => {
-              navigation.navigate('CompanyForm', {itemId: item.id});
+              navigation.navigate('ActivityForm', {itemId: item.id});
             }}>
             <ItemContent>
               <ItemName>{item.porcentagem}%</ItemName>
               <ItemName>{item.nome_cliente}</ItemName>
               <ItemName>{item.nome_empresa}</ItemName>
-              <ItemName>{item.dias.length}</ItemName>
+              <ItemName>{item.dias}</ItemName>
               <ItemName>{item.aviso}</ItemName>
               <ItemName>{item.data_ini}</ItemName>
               <ItemName>{item.data_fim}</ItemName>

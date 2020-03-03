@@ -1049,10 +1049,10 @@
     wcwidth "^1.0.1"
     ws "^1.1.0"
 
-"@react-native-community/datetimepicker@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-2.2.1.tgz#350883f1d5940d44c3adef838e9941804210ba38"
-  integrity sha512-aw/3sUQ/4iiKz43412E+AnJ8vXhu2rBnEBGEoJEZYf04sLpPLRYCoVsVBGcfWxVGNS5jyCjp5cOiYu52GSMMhA==
+"@react-native-community/datetimepicker@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-2.2.2.tgz#4c6388631179098cc5b289146e879764f79af4c1"
+  integrity sha512-J4Z1tuZQszLR+BNu+UusZlK6/S+CpI6AHzolqTdPS2tRlyVbVim3KyjXrn8trtKxQncR5LEqF9OHw9zsRfEdXA==
   dependencies:
     invariant "^2.2.4"
 
@@ -1321,18 +1321,6 @@
   dependencies:
     lodash.unescape "4.0.1"
     semver "5.5.0"
-
-"@unform/core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@unform/core/-/core-2.0.0.tgz#8b84bd2a249358566a6e041a11b8c231e092bf5b"
-  integrity sha512-dNbWoCEZlhLbLydRIbYvYFyY3K42HgFxnks1q+IJPw6otD/c6fAgnkmL3JFgY4CykkXJHzN8AIQpYmUrM2SCow==
-  dependencies:
-    dot-object "^2.1.2"
-
-"@unform/mobile@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@unform/mobile/-/mobile-2.0.0.tgz#728eb6109eaff579ea593cb8ed1635cc151e7403"
-  integrity sha512-xFvhBlZh8u42wYSO8b8zf/3a/xergemNv0C2FK97WaX4BnVpuM0gXPjdRPezWVD36/e71kufKa4i8Hog9to9KQ==
 
 abab@^2.0.0:
   version "2.0.3"
@@ -2271,11 +2259,6 @@ commander@^2.11.0, commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-commander@^4.0.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
-  integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
-
 commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
@@ -2698,14 +2681,6 @@ domutils@^1.7.0:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
-
-dot-object@^2.1.2:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/dot-object/-/dot-object-2.1.3.tgz#aa261fdefd232f0edb17e77ff4708bbed6f04b2e"
-  integrity sha512-YihsbZiGU2nEXQs1vjwjBNDJ85BMRHO4ahybAsuHERCxUecFoyt4xM3NO4GskNj8hFLRsgrwE4xBDe8XSOAiYg==
-  dependencies:
-    commander "^4.0.0"
-    glob "^7.1.5"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -3686,7 +3661,7 @@ glob@^5.0.15:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.5:
+glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==

@@ -13,16 +13,24 @@ import {
   Options,
   NotFound,
   InputSearch,
+  Item,
+  ItemText,
 } from './styles';
 
 import api from '~/services/api';
 
-export default function SelectAjax({defaultValue, defaultLabel, url, ...rest}) {
-  const [value, setValue] = useState(defaultValue);
-  const [label, setLabel] = useState(defaultLabel);
+export default function SelectAjax({
+  defaultValue,
+  defaultLabel,
+  onValueChange,
+  url,
+  ...rest
+}) {
+  const [label, setLabel] = useState();
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function handleOpenModal() {
     setShowModal(true);
@@ -32,14 +40,32 @@ export default function SelectAjax({defaultValue, defaultLabel, url, ...rest}) {
     setShowModal(false);
   }
 
-  function handleSelected() {}
+  function handleSelected(item) {
+    setLabel(item.name || item.email);
+    onValueChange(item.id);
+    setShowModal(false);
+  }
 
   async function searchQuery() {
+    setLoading(true);
     try {
-      const response = await api.post(url, {name: query});
+      const response = await api.post(url, {nome: query});
       setOptions(response.data);
-    } catch (error) {}
+    } catch (error) {
+      // error
+    } finally {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => {
+    onValueChange(defaultValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    setLabel(defaultLabel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultLabel]);
 
   useEffect(() => {
     searchQuery();
@@ -59,14 +85,17 @@ export default function SelectAjax({defaultValue, defaultLabel, url, ...rest}) {
             <ModalOptions>
               {options.length ? (
                 <Options
+                  ListHeaderComponent={() => (
+                    <>{loading && <ActivityIndicator />}</>
+                  )}
                   data={options}
                   keyExtractor={item => String(item.id)}
-                  renderItem={({item, index}) => (
+                  renderItem={({item}) => (
                     <Item
                       onPress={() => {
                         handleSelected(item);
                       }}>
-                      <ItemText>{item.name}</ItemText>
+                      <ItemText>{item.name || item.email}</ItemText>
                     </Item>
                   )}
                 />
@@ -86,8 +115,8 @@ export default function SelectAjax({defaultValue, defaultLabel, url, ...rest}) {
 }
 
 SelectAjax.propTypes = {
-  options: PropTypes.array.isRequired,
   url: PropTypes.string.isRequired,
+  onValueChange: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
   defaultValue: PropTypes.string,
 };

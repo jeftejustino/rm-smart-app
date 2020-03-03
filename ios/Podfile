@@ -42,6 +42,8 @@ target 'mobile' do
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'mobileTests' do
     inherit! :search_paths
     # Pods for testing
