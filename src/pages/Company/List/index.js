@@ -35,14 +35,14 @@ export default function CompanyList({navigation}) {
   const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
 
-  async function getData() {
+  async function getData(refresh) {
     if (loadingMore) return false;
-    if (companies.length >= total && total !== 0 && !refreshing) return false;
+    if (companies.length >= total && total !== 0 && !refresh) return false;
     setLoadingMore(true);
     try {
       const response = await api.get('empresas', {
         params: {
-          start: companies.length,
+          start: refresh ? 0 : companies.length,
           max,
           nome: filterName,
           email: filterEmail,
@@ -57,8 +57,11 @@ export default function CompanyList({navigation}) {
           "dd/LL/Y 'às' HH:mm",
         ),
       }));
-
-      setCompanies([...companies, ...data]);
+      if (refresh) {
+        setCompanies(data);
+      } else {
+        setCompanies([...companies, ...data]);
+      }
     } catch (error) {
       Alert.alert('Falha ao carregar!');
     } finally {
@@ -71,16 +74,11 @@ export default function CompanyList({navigation}) {
   async function refreshData() {
     setRefreshing(true);
 
-    setTotal(0);
-    setCompanies([]);
-
-    await getData();
-
-    setRefreshing(false);
+    await getData(true);
   }
 
   async function loadMore() {
-    await getData();
+    await getData(true);
   }
 
   function ToogleFilter() {

@@ -29,14 +29,14 @@ export default function PeopleList({navigation}) {
   const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
 
-  async function getData() {
+  async function getData(refresh) {
     if (loadingMore) return false;
-    if (people.length >= total && total !== 0 && !refreshing) return false;
+    if (people.length >= total && total !== 0 && !refresh) return false;
     setLoadingMore(true);
     try {
       const response = await api.get('pessoas', {
         params: {
-          start: people.length,
+          start: refresh ? 0 : people.length,
           max,
           nome: filterName,
           email: filterEmail,
@@ -44,7 +44,7 @@ export default function PeopleList({navigation}) {
       });
       setTotal(response.headers.total);
 
-      const data = response.data.map(item => ({
+      const data = response.data.map((item, index) => ({
         ...item,
         rankColor: RankColor[item.rank],
         updated_at_formatted: format(
@@ -52,8 +52,14 @@ export default function PeopleList({navigation}) {
           "dd/LL/Y 'às' HH:mm",
         ),
       }));
-
-      setPeople([...people, ...data]);
+      if (refresh) {
+        console.tron.log(data);
+        setPeople(data);
+      } else {
+        console.tron.warn(people);
+        console.tron.warn(data);
+        setPeople([...people, ...data]);
+      }
     } catch (error) {
       Alert.alert('Falha ao carregar!');
     } finally {
@@ -66,12 +72,7 @@ export default function PeopleList({navigation}) {
   async function refreshData() {
     setRefreshing(true);
 
-    setTotal(0);
-    setPeople([]);
-
-    await getData();
-
-    setRefreshing(false);
+    await getData(true);
   }
 
   async function loadMore() {
@@ -95,7 +96,7 @@ export default function PeopleList({navigation}) {
   }
 
   useEffect(() => {
-    getData();
+    getData(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

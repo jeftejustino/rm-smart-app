@@ -103,7 +103,7 @@ export default function ActivityList({navigation}) {
   }
 
   async function loadMore() {
-    await getData();
+    await getData(true);
   }
 
   function ToogleFilter() {
