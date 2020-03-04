@@ -44,7 +44,7 @@ export default function PeopleList({navigation}) {
       });
       setTotal(response.headers.total);
 
-      const data = response.data.map((item, index) => ({
+      const data = response.data.map(item => ({
         ...item,
         rankColor: RankColor[item.rank],
         updated_at_formatted: format(

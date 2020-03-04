@@ -8,6 +8,8 @@ import {
   eachDayOfInterval,
   setHours,
   setMinutes,
+  formatISO,
+  compareAsc,
 } from 'date-fns';
 
 import api from '~/services/api';
@@ -21,12 +23,24 @@ import {
   Item,
   ItemContent,
   ItemName,
-  // ItemPeople,
-  ItemCreated,
+  ItemTop,
+  ItemProgress,
+  ItemDays,
+  ItemType,
+  ItemAtv,
+  ItemDate,
+  ItemDateIni,
+  ItemDateIniDate,
+  ItemDateIniSpan,
+  ItemDateFim,
+  ItemDateFimDate,
+  ItemDateFimSpan,
+  ItemUser,
 } from './styles';
 
 import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
+import Select from '~/components/Select';
 import Button from '~/components/Button';
 
 export default function ActivityList({navigation}) {
@@ -39,7 +53,26 @@ export default function ActivityList({navigation}) {
   const [activities, setActivities] = useState([]);
 
   const [filterName, setFilterName] = useState('');
-  const [filterEmail, setFilterEmail] = useState('');
+  const [filterStatus, setFilterStatus] = useState(1);
+
+  const types = [
+    {
+      value: 1,
+      label: 'Atividades Pendentes',
+    },
+    {
+      value: 2,
+      label: 'Atividade Finalizadas',
+    },
+    {
+      value: 3,
+      label: 'Atividades Adicionadas',
+    },
+    {
+      value: 4,
+      label: 'Todas as Atividades',
+    },
+  ];
 
   async function getData(refresh) {
     if (loadingMore) return false;
@@ -51,7 +84,7 @@ export default function ActivityList({navigation}) {
           start: refresh ? 0 : activities.length,
           max,
           nome: filterName,
-          email: filterEmail,
+          status: filterStatus,
         },
       });
       setTotal(response.headers.total);
@@ -72,10 +105,25 @@ export default function ActivityList({navigation}) {
         } catch (error) {
           // console.tron.warn(interval);
         }
+        let color = '';
+        const comparison = compareAsc(
+          parseISO(item.data),
+          parseISO(formatISO(new Date(), {representation: 'date'})),
+        );
+        // if (comparison === 0) color = '#f00';
+        if (comparison === -1) color = '#f41e1e';
+        if (parseInt(item.realizado, 10) !== 0) color = '#40af2f';
+
+        const cli = item.nome_cliente || item.email_cliente;
+        const nome_pessoa = `${cli || ''}${
+          cli && item.nome_empresa ? ' | ' : ''
+        }${item.nome_empresa}`;
 
         return {
           ...item,
           dias,
+          color,
+          nome_pessoa,
           data_ini: format(parseISO(item.cadastro), "dd/LL/Y 'às' HH:mm"),
           data_fim: format(itemData, "dd/LL/Y 'às' HH:mm"),
         };
@@ -103,7 +151,7 @@ export default function ActivityList({navigation}) {
   }
 
   async function loadMore() {
-    await getData(true);
+    await getData();
   }
 
   function ToogleFilter() {
@@ -122,8 +170,13 @@ export default function ActivityList({navigation}) {
     setFilterActive(!filterActive);
   }
 
+  function handleSearch() {
+    setActivities([]);
+    getData(true);
+  }
+
   useEffect(() => {
-    getData();
+    getData(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -172,13 +225,19 @@ export default function ActivityList({navigation}) {
                   value={filterName}
                   onChangeText={setFilterName}
                 />
-                <Input
-                  icon="email"
-                  value={filterEmail}
-                  onChangeText={setFilterEmail}
+                <Select
+                  options={types}
+                  selectedValue={filterStatus}
+                  onValueChange={value => setFilterStatus(value)}
                 />
 
-                <Button>Buscar</Button>
+                <Button
+                  loading={loadingMore}
+                  onPress={() => {
+                    handleSearch();
+                  }}>
+                  Buscar
+                </Button>
               </Filter>
             </Animated.View>
             <ItemHeader>Atividades</ItemHeader>
@@ -200,18 +259,28 @@ export default function ActivityList({navigation}) {
               navigation.navigate('ActivityForm', {itemId: item.id});
             }}>
             <ItemContent>
-              <ItemName>{item.porcentagem}%</ItemName>
-              <ItemName>{item.nome_cliente}</ItemName>
-              <ItemName>{item.nome_empresa}</ItemName>
-              <ItemName>{item.dias}</ItemName>
-              <ItemName>{item.aviso}</ItemName>
-              <ItemName>{item.data_ini}</ItemName>
-              <ItemName>{item.data_fim}</ItemName>
-              <ItemName>{item.tipo_atv}</ItemName>
-              <ItemName>{item.nome_usuario}</ItemName>
-              <ItemCreated>
-                <Icon name="clock-outline" size={12} color="#333" />
-              </ItemCreated>
+              <ItemTop color={item.color}>
+                <ItemProgress>{item.porcentagem}%</ItemProgress>
+                <ItemDays>{item.dias} dias</ItemDays>
+                <ItemType>Tipo de Atv: {item.tipo_atv}</ItemType>
+              </ItemTop>
+
+              <ItemName>{item.nome_pessoa}</ItemName>
+
+              <ItemAtv>{item.aviso}</ItemAtv>
+
+              <ItemDate>
+                <ItemDateIni>
+                  <ItemDateIniSpan>Data de Inicio</ItemDateIniSpan>
+                  <ItemDateIniDate>{item.data_ini}</ItemDateIniDate>
+                </ItemDateIni>
+                <ItemDateFim>
+                  <ItemDateFimSpan>Finalizar até</ItemDateFimSpan>
+                  <ItemDateFimDate>{item.data_fim}</ItemDateFimDate>
+                </ItemDateFim>
+              </ItemDate>
+
+              <ItemUser>{item.nome_usuario}</ItemUser>
             </ItemContent>
           </Item>
         )}

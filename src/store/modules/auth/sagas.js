@@ -1,6 +1,5 @@
 import {all, put, call, takeLatest} from 'redux-saga/effects';
 import {Alert} from 'react-native';
-import OneSignal from 'react-native-onesignal';
 
 import {SignInSuccess, SignInFailure} from './actions';
 
