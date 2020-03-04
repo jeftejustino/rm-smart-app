@@ -113,6 +113,23 @@ export const ItemDateFimDate = styled.Text`
   font-size: 12px;
 `;
 
-export const ItemUser = styled.Text`
+export const ItemBottom = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
   padding: 5px 15px 15px;
+`;
+
+export const ItemUser = styled.Text`
+  padding: 5px 10px 0 0;
+`;
+
+export const ItemUpdate = styled.TouchableOpacity`
+  background: #0a0;
+  padding: 5px 10px;
+  border-radius: 5px;
+`;
+
+export const ItemUpdateText = styled.Text`
+  color: #fff;
+  font-size: 13px;
 `;

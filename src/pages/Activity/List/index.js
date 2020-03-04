@@ -36,6 +36,9 @@ import {
   ItemDateFimDate,
   ItemDateFimSpan,
   ItemUser,
+  ItemBottom,
+  ItemUpdate,
+  ItemUpdateText,
 } from './styles';
 
 import ActionButton from '~/components/ActionButton';
@@ -279,8 +282,17 @@ export default function ActivityList({navigation}) {
                   <ItemDateFimDate>{item.data_fim}</ItemDateFimDate>
                 </ItemDateFim>
               </ItemDate>
-
-              <ItemUser>{item.nome_usuario}</ItemUser>
+              <ItemBottom>
+                <ItemUser>{item.nome_usuario}</ItemUser>
+                <ItemUpdate
+                  onPress={() => {
+                    navigation.navigate('ActivityUpdate', {itemId: item.id});
+                  }}>
+                  <ItemUpdateText>
+                    <Icon name="pencil" /> Atualizar
+                  </ItemUpdateText>
+                </ItemUpdate>
+              </ItemBottom>
             </ItemContent>
           </Item>
         )}

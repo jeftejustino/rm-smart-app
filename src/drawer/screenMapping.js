@@ -13,6 +13,7 @@ import VisitsNew from '~/pages/Visits/New';
 import VisitsStarted from '~/pages/Visits/Started';
 import ActivityList from '~/pages/Activity/List';
 import ActivityForm from '~/pages/Activity/Form';
+import ActivityUpdate from '~/pages/Activity/Update';
 
 import Header from '~/components/Header';
 
@@ -78,6 +79,7 @@ export default function screenMapping() {
         {
           ActivityList,
           ActivityForm,
+          ActivityUpdate,
         },
         {
           defaultNavigationOptions: Header,
