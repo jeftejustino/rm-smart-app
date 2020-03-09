@@ -18,9 +18,10 @@ export function StartVisitFailure() {
   };
 }
 
-export function StopVisitRequest() {
+export function StopVisitRequest(payload) {
   return {
     type: '@visit/STOP_VISIT_REQUEST',
+    payload,
   };
 }
 

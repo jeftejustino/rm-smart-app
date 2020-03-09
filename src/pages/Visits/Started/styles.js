@@ -14,6 +14,36 @@ export const Title = styled.Text`
 
 export const User = styled.Text`
   font-size: 16px;
+  margin-bottom: 5px;
+  text-align: left;
 `;
 
-export const Started = styled.Text``;
+export const Address = styled.Text`
+  margin-bottom: 5px;
+  text-align: left;
+`;
+
+export const Started = styled.Text`
+  margin-bottom: 5px;
+  text-align: left;
+`;
+
+export const Input = styled.TextInput`
+  background: #fff;
+  margin: 8px 0px 16px;
+  padding: 0px 10px;
+  height: 40px;
+  border: 1px solid #ddd;
+`;
+
+export const InputTextArea = styled.TextInput.attrs({
+  multiline: true,
+  numberOfLines: 3,
+  textAlignVertical: 'top',
+})`
+  border: 1px solid #ddd;
+  background: #fff;
+  margin: 8px 0px;
+  padding: 10px 10px;
+  height: 70px;
+`;

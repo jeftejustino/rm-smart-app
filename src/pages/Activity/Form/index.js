@@ -207,7 +207,7 @@ export default function ActivityForm({navigation}) {
               onValueChange={value => setType(value)}
             />
 
-            {type === 4 ? (
+            {type === 5 ? (
               <Input
                 placeholder="Localização"
                 value={location}

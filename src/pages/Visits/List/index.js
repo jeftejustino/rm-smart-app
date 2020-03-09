@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {Animated} from 'react-native';
+import {Animated, Alert} from 'react-native';
+import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
+import {format, parseISO} from 'date-fns';
+// import NumberFormat from 'react-number-format';
+
+import api from '~/services/api';
 
 import {
   Container,
@@ -22,50 +27,13 @@ import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 
-export default function PeopleList({navigation}) {
-  const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
+export default function VisitList({navigation}) {
+  const [filterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
-  const [visits, setVisits] = useState([
-    {
-      id: 1,
-      name: 'Teste desenvolvimento',
-      price: 120.54,
-      price_formatted: 'R$ 120,54',
-      address:
-        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
-      start_at: '2019-09-13 16:34',
-      start_at_formatted: '13/09/19 16:34',
-      end_at: '2019-09-13 18:10',
-      end_at_formatted: '13/09/19 18:10',
-    },
-    {
-      id: 2,
-      name: 'Teste desenvolvimento',
-      price: 120.54,
-      price_formatted: 'R$ 120,54',
-      address:
-        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
-      start_at: '2019-09-13 16:34',
-      start_at_formatted: '13/09/19 16:34',
-      end_at: '2019-09-13 18:10',
-      end_at_formatted: '13/09/19 18:10',
-    },
-    {
-      id: 3,
-      name: 'Teste desenvolvimento',
-      price: 120.54,
-      price_formatted: 'R$ 120,54',
-      address:
-        'R. Napoleão Laureano, 5 - Fatima, Fortaleza - CE, 60040-530, Brazil',
-      start_at: '2019-09-13 16:34',
-      start_at_formatted: '13/09/19 16:34',
-      end_at: '2019-09-13 18:10',
-      end_at_formatted: '13/09/19 18:10',
-    },
-  ]);
+  const [visits, setVisits] = useState([]);
   const visit_started = useSelector(state => state.visit.visit_started);
 
   if (visit_started) {
@@ -88,13 +56,82 @@ export default function PeopleList({navigation}) {
     setFilterActive(!filterActive);
   }
 
+  async function getData(refresh) {
+    if (loadingMore) return false;
+    if (visits.length >= total && total !== 0 && !refresh) return false;
+    setLoadingMore(true);
+    try {
+      const response = await api.get('visitas', {
+        params: {
+          start: refresh ? 0 : visits.length,
+          // nome: filterName,
+          // status: filterStatus,
+        },
+      });
+      setTotal(response.headers.total);
+
+      const data = response.data.map(item => {
+        return {
+          id: item.id,
+          name: item.nome,
+          price: item.valor,
+          price_formatted: `R$ ${parseFloat(item.valor)
+            .toFixed(2)
+            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`,
+          address: item.endereco_completo,
+          start_at_formatted: format(
+            parseISO(item.inicio_data),
+            "dd/LL/Y 'às' HH:mm",
+          ),
+          end_at_formatted: format(
+            parseISO(item.fim_data),
+            "dd/LL/Y 'às' HH:mm",
+          ),
+        };
+      });
+      if (refresh) {
+        setVisits(data);
+      } else {
+        setVisits([...visits, ...data]);
+      }
+    } catch (error) {
+      Alert.alert('Falha ao carregar!');
+    } finally {
+      setLoadingMore(false);
+      setRefreshing(false);
+    }
+    return true;
+  }
+
+  async function refreshData() {
+    setRefreshing(true);
+
+    getData(true);
+  }
+
+  async function loadMore() {
+    await getData();
+  }
+
+  function handleSearch() {
+    setVisits([]);
+    getData(true);
+  }
+
+  useEffect(() => {
+    getData(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Container>
       <List
-        onRefresh={() => {}}
+        onRefresh={() => refreshData()}
         refreshing={refreshing}
         onEndReachedThreshold={0.4}
-        onEndReached={() => {}}
+        onEndReached={() => {
+          loadMore();
+        }}
         ListHeaderComponent={
           <>
             <Actions>
@@ -134,7 +171,7 @@ export default function PeopleList({navigation}) {
                   placeholder="Email da Pessoa"
                 />
 
-                <Button>Buscar</Button>
+                <Button onPress={() => handleSearch()}>Buscar</Button>
               </Filter>
             </Animated.View>
           </>
@@ -160,3 +197,7 @@ export default function PeopleList({navigation}) {
     </Container>
   );
 }
+
+VisitList.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

@@ -120,7 +120,7 @@ export default function ActivityList({navigation}) {
         const cli = item.nome_cliente || item.email_cliente;
         const nome_pessoa = `${cli || ''}${
           cli && item.nome_empresa ? ' | ' : ''
-        }${item.nome_empresa}`;
+        }${item.nome_empresa || ''}`;
 
         return {
           ...item,
