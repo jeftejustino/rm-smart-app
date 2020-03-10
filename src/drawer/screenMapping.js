@@ -14,6 +14,7 @@ import VisitsStarted from '~/pages/Visits/Started';
 import ActivityList from '~/pages/Activity/List';
 import ActivityForm from '~/pages/Activity/Form';
 import ActivityUpdate from '~/pages/Activity/Update';
+import Notification from '~/pages/Notification';
 
 import Header from '~/components/Header';
 
@@ -109,7 +110,7 @@ export default function screenMapping() {
     Notifications: {
       screen: createStackNavigator(
         {
-          Dashboard,
+          Notification,
         },
         {
           defaultNavigationOptions: Header,
