@@ -13,9 +13,9 @@ export default function DatePicker({defaultDate, enabledTime, onDateChange}) {
 
   const onChange = (event, selectedDate) => {
     setShow(false);
-    if (selectedDate && enabledTime) {
+    if (selectedDate) {
       setDate(selectedDate);
-      setShowTime(true);
+      if (enabledTime) setShowTime(true);
     }
   };
   const onChangeTime = (event, selectedDate) => {

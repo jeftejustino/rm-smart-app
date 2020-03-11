@@ -3,7 +3,8 @@ import {Animated, Alert} from 'react-native';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {format, parseISO} from 'date-fns';
-// import NumberFormat from 'react-number-format';
+
+import DatePicker from '~/components/DatePicker';
 
 import api from '~/services/api';
 
@@ -29,6 +30,8 @@ import Button from '~/components/Button';
 
 export default function VisitList({navigation}) {
   const [filterHeight] = useState(new Animated.Value(0));
+  const [filterDateStart, setFilterDateStart] = useState(new Date());
+  const [filterDateEnd, setFilterDateEnd] = useState(new Date());
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -64,8 +67,8 @@ export default function VisitList({navigation}) {
       const response = await api.get('visitas', {
         params: {
           start: refresh ? 0 : visits.length,
-          // nome: filterName,
-          // status: filterStatus,
+          data_ini: filterDateStart,
+          data_fim: filterDateEnd,
         },
       });
       setTotal(response.headers.total);
@@ -164,11 +167,10 @@ export default function VisitList({navigation}) {
                 }),
               }}>
               <Filter>
-                <Input icon="person" name="name" placeholder="Nome | Empresa" />
-                <Input
-                  icon="email"
-                  name="email"
-                  placeholder="Email da Pessoa"
+                <DatePicker
+                  defaultDate={filterDateStart}
+                  enabledTime={false}
+                  onDateChange={setFilterDateStart}
                 />
 
                 <Button onPress={() => handleSearch()}>Buscar</Button>
