@@ -36,7 +36,6 @@ export function setToken({payload}) {
       api.defaults.headers.common.Rmtoken = token;
       api.defaults.headers.common.Userid = userId;
       api.defaults.headers.common.Gerenciador = gerenciador;
-      console.tron.log(api.defaults.headers);
     }
   }
 }

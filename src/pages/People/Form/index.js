@@ -257,7 +257,6 @@ export default function PeopleForm({navigation}) {
       navigation.navigate('PeopleList');
     } catch (error) {
       Alert.alert('Erro ao salvar!', error.response.data.error || '');
-      console.tron.log();
     } finally {
       setLoading(false);
     }
@@ -294,7 +293,6 @@ export default function PeopleForm({navigation}) {
       navigation.navigate('PeopleList');
     } catch (error) {
       Alert.alert('Erro ao salvar!', error.response.data.error || '');
-      console.tron.log();
     } finally {
       setLoading(false);
     }

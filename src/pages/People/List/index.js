@@ -53,7 +53,6 @@ export default function PeopleList({navigation}) {
         ),
       }));
       if (refresh) {
-        console.tron.log(data);
         setPeople(data);
       } else {
         console.tron.warn(people);

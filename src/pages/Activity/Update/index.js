@@ -36,7 +36,6 @@ export default function ActivityUpdate({navigation}) {
       navigation.navigate('ActivityList');
     } catch (error) {
       Alert.alert('Erro ao salvar!', error.response.data.error || '');
-      console.tron.log();
     } finally {
       setLoading(false);
     }

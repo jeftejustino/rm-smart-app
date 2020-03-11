@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {Container, Button, Text} from './styles';
 
-export default function DatePicker({defaultDate, onDateChange}) {
+export default function DatePicker({defaultDate, enabledTime, onDateChange}) {
   const [date, setDate] = useState(defaultDate);
   const [dateFormatted, setDateFormatted] = useState();
   const [show, setShow] = useState(false);
@@ -13,7 +13,7 @@ export default function DatePicker({defaultDate, onDateChange}) {
 
   const onChange = (event, selectedDate) => {
     setShow(false);
-    if (selectedDate) {
+    if (selectedDate && enabledTime) {
       setDate(selectedDate);
       setShowTime(true);
     }
@@ -31,7 +31,11 @@ export default function DatePicker({defaultDate, onDateChange}) {
 
   useEffect(() => {
     onDateChange(date);
-    setDateFormatted(format(date, "dd/LL/Y 'às' HH:mm"));
+    if (enabledTime) {
+      setDateFormatted(format(date, "dd/LL/Y 'às' HH:mm"));
+    } else {
+      setDateFormatted(format(date, 'dd/LL/Y'));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
@@ -73,4 +77,9 @@ export default function DatePicker({defaultDate, onDateChange}) {
 DatePicker.propTypes = {
   onDateChange: PropTypes.func.isRequired,
   defaultDate: PropTypes.object.isRequired,
+  enabledTime: PropTypes.bool,
+};
+
+DatePicker.defaultProps = {
+  enabledTime: true,
 };
