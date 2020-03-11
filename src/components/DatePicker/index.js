@@ -5,7 +5,14 @@ import PropTypes from 'prop-types';
 
 import {Container, Button, Text} from './styles';
 
-export default function DatePicker({defaultDate, enabledTime, onDateChange}) {
+export default function DatePicker({
+  defaultDate,
+  enabledTime,
+  onDateChange,
+  prefix,
+  suffix,
+  ...rest
+}) {
   const [date, setDate] = useState(defaultDate);
   const [dateFormatted, setDateFormatted] = useState();
   const [show, setShow] = useState(false);
@@ -45,7 +52,11 @@ export default function DatePicker({defaultDate, enabledTime, onDateChange}) {
         onPress={() => {
           showDatePicker();
         }}>
-        <Text>{dateFormatted}</Text>
+        <Text {...rest}>
+          {prefix}
+          {dateFormatted}
+          {suffix}
+        </Text>
       </Button>
       {show && (
         <DateTimePicker
@@ -78,8 +89,12 @@ DatePicker.propTypes = {
   onDateChange: PropTypes.func.isRequired,
   defaultDate: PropTypes.object.isRequired,
   enabledTime: PropTypes.bool,
+  prefix: PropTypes.string,
+  suffix: PropTypes.string,
 };
 
 DatePicker.defaultProps = {
   enabledTime: true,
+  prefix: '',
+  suffix: '',
 };

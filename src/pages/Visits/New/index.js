@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {TouchableOpacity, ActivityIndicator} from 'react-native';
+import {TouchableOpacity, ActivityIndicator, Alert} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {format, parseISO, setMinutes, setHours} from 'date-fns';
 import PropTypes from 'prop-types';
 
 import api from '~/services/api';
 import Button from '~/components/Button';
+import DatePicker from '~/components/DatePicker';
 
 import {
   Container,
@@ -26,13 +27,26 @@ export default function VisitNew({navigation}) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [visits, setVisits] = useState([]);
   const [total, setTotal] = useState(0);
+  const [filterDate, setFilterDate] = useState(new Date());
 
   const loading = useSelector(state => state.visit.loading);
 
   const dispatch = useDispatch();
 
   function startVisit(visit) {
-    dispatch(StartVisitRequest(visit));
+    Alert.alert(
+      'Atenção!',
+      `Deseja iniciar a reunião com ${visit.name}?`,
+      [
+        {
+          text: 'Não',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'Sim', onPress: () => dispatch(StartVisitRequest(visit))},
+      ],
+      {cancelable: false},
+    );
   }
 
   async function loadVisits(refresh) {
@@ -45,6 +59,7 @@ export default function VisitNew({navigation}) {
           start: refresh ? 0 : visits.length,
           status: 1,
           tipo: 5,
+          data: format(filterDate, 'Y-LL-dd'),
         },
       });
       setTotal(response.headers.total);
@@ -91,7 +106,7 @@ export default function VisitNew({navigation}) {
   useEffect(() => {
     loadVisits(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filterDate]);
 
   return (
     <Container>
@@ -106,8 +121,18 @@ export default function VisitNew({navigation}) {
             <Button onPress={() => navigation.navigate('ActivityForm')}>
               Adicionar Visita
             </Button>
+
+            <DatePicker
+              defaultDate={filterDate}
+              onDateChange={setFilterDate}
+              enabledTime={false}
+              prefix="Filtro: "
+              style={{textAlign: 'center'}}
+            />
             {visits.length === 0 ? (
-              <HeaderTitle>Não há reuniões cadastradas</HeaderTitle>
+              <HeaderTitle>
+                Não há reuniões agendadas para esta data!
+              </HeaderTitle>
             ) : (
               <></>
             )}

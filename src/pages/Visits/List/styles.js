@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import styled from 'styled-components/native';
 
 export const Container = styled.View``;
@@ -14,6 +15,19 @@ export const Filter = styled.View`
   background: #333;
   margin: 15px 0px 30px 0px;
   padding: 25px 20px;
+`;
+
+export const FilterBlock = styled.View`
+  flex-direction: row;
+  margin-bottom: 10px;
+  justify-content: center;
+`;
+
+export const FilterLabel = styled.Text`
+  color: #fff;
+  font-size: 16px;
+  width: 80px;
+  padding-top: 15px;
 `;
 
 export const List = styled.FlatList`
@@ -57,7 +71,21 @@ export const ItemEnd = styled.Text`
   font-size: 13px;
 `;
 
-export const ItemPrice = styled.Text`
+export const ItemAtvDate = styled.Text`
+  font-size: 13px;
+  margin-bottom: 5px;
+`;
+
+export const ItemAtvAddress = styled.Text`
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom-color: #eee;
+  width: 100%;
+  border-bottom-width: 1px;
+`;
+
+export const ItemDisctance = styled.Text`
   font-size: 13px;
   margin-bottom: 5px;
 `;

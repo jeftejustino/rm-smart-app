@@ -7,7 +7,7 @@ import PeopleForm from '~/pages/People/Form';
 import CompanyList from '~/pages/Company/List';
 import CompanyForm from '~/pages/Company/Form';
 import SingOut from '~/pages/SingOut';
-import RealTime from '~/pages/RealTime';
+// import RealTime from '~/pages/RealTime';
 import VisitsList from '~/pages/Visits/List';
 import VisitsNew from '~/pages/Visits/New';
 import VisitsStarted from '~/pages/Visits/Started';
@@ -61,19 +61,19 @@ export default function screenMapping() {
       },
     },
 
-    RealTime: {
-      screen: createStackNavigator(
-        {
-          RealTime,
-        },
-        {
-          defaultNavigationOptions: Header,
-        },
-      ),
-      navigationOptions: {
-        title: 'Atividades Recentes',
-      },
-    },
+    // RealTime: {
+    //   screen: createStackNavigator(
+    //     {
+    //       RealTime,
+    //     },
+    //     {
+    //       defaultNavigationOptions: Header,
+    //     },
+    //   ),
+    //   navigationOptions: {
+    //     title: 'Atividades Recentes',
+    //   },
+    // },
 
     Activities: {
       screen: createStackNavigator(
