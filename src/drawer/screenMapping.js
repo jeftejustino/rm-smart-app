@@ -7,10 +7,14 @@ import PeopleForm from '~/pages/People/Form';
 import CompanyList from '~/pages/Company/List';
 import CompanyForm from '~/pages/Company/Form';
 import SingOut from '~/pages/SingOut';
-import RealTime from '~/pages/RealTime';
+// import RealTime from '~/pages/RealTime';
 import VisitsList from '~/pages/Visits/List';
 import VisitsNew from '~/pages/Visits/New';
 import VisitsStarted from '~/pages/Visits/Started';
+import ActivityList from '~/pages/Activity/List';
+import ActivityForm from '~/pages/Activity/Form';
+import ActivityUpdate from '~/pages/Activity/Update';
+import Notification from '~/pages/Notification';
 
 import Header from '~/components/Header';
 
@@ -57,24 +61,26 @@ export default function screenMapping() {
       },
     },
 
-    RealTime: {
-      screen: createStackNavigator(
-        {
-          RealTime,
-        },
-        {
-          defaultNavigationOptions: Header,
-        },
-      ),
-      navigationOptions: {
-        title: 'Atividades Recentes',
-      },
-    },
+    // RealTime: {
+    //   screen: createStackNavigator(
+    //     {
+    //       RealTime,
+    //     },
+    //     {
+    //       defaultNavigationOptions: Header,
+    //     },
+    //   ),
+    //   navigationOptions: {
+    //     title: 'Atividades Recentes',
+    //   },
+    // },
 
     Activities: {
       screen: createStackNavigator(
         {
-          Dashboard,
+          ActivityList,
+          ActivityForm,
+          ActivityUpdate,
         },
         {
           defaultNavigationOptions: Header,
@@ -104,7 +110,7 @@ export default function screenMapping() {
     Notifications: {
       screen: createStackNavigator(
         {
-          Dashboard,
+          Notification,
         },
         {
           defaultNavigationOptions: Header,

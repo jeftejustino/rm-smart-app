@@ -3,23 +3,44 @@ import {Alert} from 'react-native';
 
 import {SignInSuccess, SignInFailure} from './actions';
 
-// import api from '~/services/api';
+import api from '~/services/api';
 
 export function* SignIn({payload}) {
   try {
-    // const {userId} = payload;
-    // const response = yield call(api.get, `student/${userId}`);
-    // const profile = response.data;
-    yield put(
-      SignInSuccess({name: 'Teste Usuario', email: 'jefte.justino@gmail.comn'}),
-    );
+    const {email, password} = payload;
+
+    if (!email) throw new Error('Informe o email!');
+    if (!password) throw new Error('Informe a senha!');
+
+    const response = yield call(api.post, `login`, {
+      email,
+      password,
+    });
+    const profile = response.data;
+    const {token, id, gerenciador} = profile;
+    api.defaults.headers.common.Rmtoken = token;
+    api.defaults.headers.common.Userid = id;
+    api.defaults.headers.common.Gerenciador = gerenciador;
+
+    yield put(SignInSuccess(profile));
   } catch (error) {
     yield put(SignInFailure());
-    Alert.alert(
-      'Falha na autenticação',
-      'O ID informado não consta no nosso cadastro!',
-    );
+    Alert.alert('Falha na autenticação', 'Informe seus dados corretamente!');
   }
 }
 
-export default all([takeLatest('@auth/SIGN_IN_REQUEST', SignIn)]);
+export function setToken({payload}) {
+  if (payload) {
+    const {token, userId, gerenciador} = payload.auth;
+    if (token) {
+      api.defaults.headers.common.Rmtoken = token;
+      api.defaults.headers.common.Userid = userId;
+      api.defaults.headers.common.Gerenciador = gerenciador;
+    }
+  }
+}
+
+export default all([
+  takeLatest('@auth/SIGN_IN_REQUEST', SignIn),
+  takeLatest('persist/REHYDRATE', setToken),
+]);

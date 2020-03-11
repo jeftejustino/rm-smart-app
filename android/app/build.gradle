@@ -140,7 +140,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mobile"
+        applicationId "br.com.rmsmart"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -161,6 +161,15 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -170,10 +179,11 @@ android {
             signingConfig signingConfigs.debug
         }
 
-        reselaseStanging {
+        releaseStaging {
             resValue "string", "CodePushDeploymentKey", '"59dhw1BEFS73VQ0dIk9UBN5u134XjSu6HoW0D"'
 
-            matchingFallbacks = ['debug', 'release']
+            matchingFallbacks = ['release']
+
         }
 
         release {
@@ -182,9 +192,9 @@ android {
 
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -204,6 +214,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_datetimepicker')
     implementation project(':react-native-code-push')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-safe-area-context')

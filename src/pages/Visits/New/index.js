@@ -1,7 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {TouchableOpacity} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {TouchableOpacity, ActivityIndicator, Alert} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {format, parseISO, setMinutes, setHours} from 'date-fns';
+import PropTypes from 'prop-types';
+
+import api from '~/services/api';
+import Button from '~/components/Button';
+import DatePicker from '~/components/DatePicker';
 
 import {
   Container,
@@ -11,43 +17,136 @@ import {
   ItemContent,
   ItemName,
   ItemDate,
+  ItemAddress,
 } from './styles';
 
 import {StartVisitRequest} from '~/store/modules/visit/actions';
 
-export default function ListNew() {
+export default function VisitNew({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
-  const [visits] = useState([
-    {
-      id: 1,
-      name: 'Cliente Name',
-      date_at: '2020-02-07 16:00',
-      date_at_formatted: '07/02/2020 às 16:00',
-      isSelected: false,
-    },
-    {
-      id: 2,
-      name: 'Cliente Name',
-      date_at: '2020-02-07 16:00',
-      date_at_formatted: '07/02/2020 às 16:00',
-      isSelected: false,
-    },
-  ]);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [visits, setVisits] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [filterDate, setFilterDate] = useState(new Date());
+
+  const loading = useSelector(state => state.visit.loading);
 
   const dispatch = useDispatch();
 
   function startVisit(visit) {
-    dispatch(StartVisitRequest(visit));
+    Alert.alert(
+      'Atenção!',
+      `Deseja iniciar a reunião com ${visit.name}?`,
+      [
+        {
+          text: 'Não',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'Sim', onPress: () => dispatch(StartVisitRequest(visit))},
+      ],
+      {cancelable: false},
+    );
   }
+
+  async function loadVisits(refresh) {
+    if (visits.length >= total && total !== 0 && !refresh) return false;
+    try {
+      setRefreshing(true);
+
+      const response = await api.get('atividades', {
+        params: {
+          start: refresh ? 0 : visits.length,
+          status: 1,
+          tipo: 5,
+          data: format(filterDate, 'Y-LL-dd'),
+        },
+      });
+      setTotal(response.headers.total);
+
+      const data = response.data.map(item => {
+        const cli = item.nome_cliente || item.email_cliente;
+        const nome_pessoa = `${cli || ''}${
+          cli && item.nome_empresa ? ' | ' : ''
+        }${item.nome_empresa || ''}`;
+
+        const itemData =
+          parseInt(item.realizado, 10) !== 0
+            ? parseISO(item.finalizado)
+            : setMinutes(setHours(parseISO(item.data), item.hora), item.minuto);
+
+        return {
+          id: item.id,
+          name: nome_pessoa,
+          endereco: item.endereco,
+          date_at_formatted: format(itemData, "dd/LL/Y 'às' HH:mm"),
+        };
+      });
+
+      if (refresh) {
+        setVisits(data);
+      } else {
+        setVisits([...visits, ...data]);
+      }
+    } catch (error) {
+      // console.tron.warn(error);
+      // error
+    } finally {
+      setRefreshing(false);
+      setLoadingMore(false);
+    }
+
+    return true;
+  }
+
+  function loadMore() {
+    loadVisits();
+  }
+
+  useEffect(() => {
+    loadVisits(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterDate]);
 
   return (
     <Container>
       <List
-        onRefresh={() => {}}
-        refreshing={refreshing}
+        onRefresh={() => {
+          loadVisits(true);
+        }}
+        refreshing={refreshing || loading}
         ListHeaderComponent={
           <>
             <HeaderTitle>Selecione a visita que deseja começar</HeaderTitle>
+            <Button onPress={() => navigation.navigate('ActivityForm')}>
+              Adicionar Visita
+            </Button>
+
+            <DatePicker
+              defaultDate={filterDate}
+              onDateChange={setFilterDate}
+              enabledTime={false}
+              prefix="Filtro: "
+              style={{textAlign: 'center'}}
+            />
+            {visits.length === 0 ? (
+              <HeaderTitle>
+                Não há reuniões agendadas para esta data!
+              </HeaderTitle>
+            ) : (
+              <></>
+            )}
+          </>
+        }
+        onEndReachedThreshold={0.4}
+        onEndReached={() => {
+          loadMore();
+        }}
+        ListFooterComponent={
+          <>
+            {(loadingMore || loading) && (
+              <ActivityIndicator color="#f60" style={{padding: 20}} />
+            )}
           </>
         }
         data={visits}
@@ -56,6 +155,10 @@ export default function ListNew() {
           <Item index={index} onPress={() => startVisit(item)}>
             <ItemContent>
               <ItemName>{item.name}</ItemName>
+              <ItemAddress>
+                <Icon name="map-marker" size={12} color="#333" />{' '}
+                {item.endereco}
+              </ItemAddress>
               <ItemDate>
                 <Icon name="clock-outline" size={12} color="#333" />{' '}
                 {item.date_at_formatted}
@@ -68,7 +171,7 @@ export default function ListNew() {
   );
 }
 
-ListNew.navigationOptions = ({navigation}) => ({
+VisitNew.navigationOptions = ({navigation}) => ({
   headerLeft: () => (
     <TouchableOpacity
       onPress={() => {
@@ -81,3 +184,7 @@ ListNew.navigationOptions = ({navigation}) => ({
     paddingLeft: 15,
   },
 });
+
+VisitNew.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

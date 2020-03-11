@@ -1,6 +1,11 @@
-import React, {useState} from 'react';
-import {Animated} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Animated, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PropTypes from 'prop-types';
+import {parseISO, format} from 'date-fns';
+
+import api from '~/services/api';
+
 import {
   Container,
   Actions,
@@ -10,7 +15,7 @@ import {
   Item,
   ItemContent,
   ItemName,
-  ItemPeople,
+  // ItemPeople,
   ItemCreated,
 } from './styles';
 
@@ -19,34 +24,62 @@ import Input from '~/components/Input';
 import Button from '~/components/Button';
 
 export default function CompanyList({navigation}) {
-  const [filterHeight, setFilterHeight] = useState(new Animated.Value(0));
+  const [filterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
-  const [companies, setCompanies] = useState([
-    {
-      id: 1,
-      name: 'Teste NF',
-      people: 15,
-      created_at: '2019-09-13 16:34',
-      created_at_formatted: '13/09/19 às 16:34',
-    },
-    {
-      id: 2,
-      name: 'Teste NF',
-      people: 15,
-      created_at: '2019-09-13 16:34',
-      created_at_formatted: '13/09/19 às 16:34',
-    },
-    {
-      id: 3,
-      name: 'Teste NF',
-      people: 15,
-      created_at: '2019-09-13 16:34',
-      created_at_formatted: '13/09/19 às 16:34',
-    },
-  ]);
+  const [max] = useState(8);
+  const [companies, setCompanies] = useState([]);
+
+  const [filterName, setFilterName] = useState('');
+  const [filterEmail, setFilterEmail] = useState('');
+
+  async function getData(refresh) {
+    if (loadingMore) return false;
+    if (companies.length >= total && total !== 0 && !refresh) return false;
+    setLoadingMore(true);
+    try {
+      const response = await api.get('empresas', {
+        params: {
+          start: refresh ? 0 : companies.length,
+          max,
+          nome: filterName,
+          email: filterEmail,
+        },
+      });
+      setTotal(response.headers.total);
+
+      const data = response.data.map(item => ({
+        ...item,
+        created_at_formatted: format(
+          parseISO(item.cadastro),
+          "dd/LL/Y 'às' HH:mm",
+        ),
+      }));
+      if (refresh) {
+        setCompanies(data);
+      } else {
+        setCompanies([...companies, ...data]);
+      }
+    } catch (error) {
+      Alert.alert('Falha ao carregar!');
+    } finally {
+      setLoadingMore(false);
+      setRefreshing(false);
+    }
+    return true;
+  }
+
+  async function refreshData() {
+    setRefreshing(true);
+
+    await getData(true);
+  }
+
+  async function loadMore() {
+    await getData(true);
+  }
 
   function ToogleFilter() {
     if (filterActive) {
@@ -64,13 +97,20 @@ export default function CompanyList({navigation}) {
     setFilterActive(!filterActive);
   }
 
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Container>
       <List
-        onRefresh={() => {}}
+        onRefresh={() => refreshData()}
         refreshing={refreshing}
         onEndReachedThreshold={0.4}
-        onEndReached={() => {}}
+        onEndReached={() => {
+          loadMore();
+        }}
         ListHeaderComponent={
           <>
             <Actions>
@@ -101,11 +141,16 @@ export default function CompanyList({navigation}) {
                 }),
               }}>
               <Filter>
-                <Input icon="person" name="name" placeholder="Nome | Empresa" />
+                <Input
+                  icon="person"
+                  placeholder="Nome | Empresa"
+                  value={filterName}
+                  onChangeText={setFilterName}
+                />
                 <Input
                   icon="email"
-                  name="email"
-                  placeholder="Email da Pessoa"
+                  value={filterEmail}
+                  onChangeText={setFilterEmail}
                 />
 
                 <Button>Buscar</Button>
@@ -117,10 +162,14 @@ export default function CompanyList({navigation}) {
         data={companies}
         keyExtractor={item => String(item.id)}
         renderItem={({item, index}) => (
-          <Item index={index}>
+          <Item
+            index={index}
+            onPress={() => {
+              navigation.navigate('CompanyForm', {itemId: item.id});
+            }}>
             <ItemContent>
-              <ItemName>{item.name}</ItemName>
-              <ItemPeople>Quantidade de Pessoas: {item.people}</ItemPeople>
+              <ItemName>{item.empresa}</ItemName>
+              {/* <ItemPeople>Quantidade de Pessoas: {item.people}</ItemPeople> */}
               <ItemCreated>
                 <Icon name="clock-outline" size={12} color="#333" />{' '}
                 {item.created_at_formatted}
@@ -132,3 +181,7 @@ export default function CompanyList({navigation}) {
     </Container>
   );
 }
+
+CompanyList.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

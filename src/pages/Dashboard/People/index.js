@@ -1,27 +1,29 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Dimensions} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
+import {parseISO, format} from 'date-fns';
+import PropTypes from 'prop-types';
 
 import {Container, Title} from './styles';
 
-export default function People() {
+export default function People({info}) {
   const screenWidth = Dimensions.get('window').width;
-
-  const labels = [
-    '01/02',
-    '02/02',
-    '03/02',
-    '04/02',
-    '05/02',
-    '06/02',
-    '07/02',
-  ];
+  const [values, setValues] = useState([1, 1, 1, 1, 1, 1, 1]);
+  const [labels, setLabels] = useState([
+    '01/01',
+    '02/01',
+    '03/01',
+    '04/01',
+    '05/01',
+    '06/01',
+    '07/01',
+  ]);
 
   const data = {
     labels,
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43, 34],
+        data: values,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         barColors: ['#f00'],
       },
@@ -39,6 +41,18 @@ export default function People() {
     barColors: ['#f00'],
   };
 
+  useEffect(() => {
+    const lb = [];
+    const vl = [];
+    Object.entries(info).map(value => {
+      lb.push(format(parseISO(value[0]), 'dd/MM'));
+      vl.push(value[1]);
+      return 0;
+    });
+    setLabels(lb);
+    setValues(vl);
+  }, [info]);
+
   return (
     <Container>
       <Title>Pessoas</Title>
@@ -52,3 +66,7 @@ export default function People() {
     </Container>
   );
 }
+
+People.propTypes = {
+  info: PropTypes.object.isRequired,
+};

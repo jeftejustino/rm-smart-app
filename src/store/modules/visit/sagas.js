@@ -1,7 +1,7 @@
 import {all, put, call, takeLatest} from 'redux-saga/effects';
 import {Alert, PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-// import {getDate} from 'date-fns';
+import api from '~/services/api';
 
 import {
   StartVisitSuccess,
@@ -28,31 +28,59 @@ function* requestPermissionLocation() {
       },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      // teste
-    } else {
-      // teste
+      return true;
     }
-  } catch (err) {}
+    return false;
+  } catch (err) {
+    return false;
+  }
+}
+
+function userPositionPromised() {
+  const position = {};
+  if (Geolocation) {
+    Geolocation.getCurrentPosition(
+      location => position.on({location}),
+      error => position.on({error}),
+      {enableHighAccuracy: true},
+    );
+  }
+  // eslint-disable-next-line no-return-assign
+  return {getLocation: () => new Promise(location => (position.on = location))};
 }
 
 export function* StartVisit({payload}) {
-  yield requestPermissionLocation();
+  const permission = yield requestPermissionLocation();
+
+  if (!permission) {
+    yield put(StartVisitFailure());
+    Alert.alert(
+      'Falha ao Iniciar Visita',
+      'ocorreu um erro, tente novamente mais tarde!',
+    );
+  }
 
   try {
-    Geolocation.getCurrentPosition(
-      position => {},
-      error => {
-        // See error code charts below.
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+    const {getLocation} = yield call(userPositionPromised);
+    const {error, location} = yield call(getLocation);
+
+    if (error) throw new Error(error);
+
+    const data = {
+      atividade: payload.visit.id,
+      ...location,
+    };
+
+    const response = yield call(api.post, 'visita/iniciar', data);
+
+    const {id, data_inicio, pessoa, endereco_completo} = response.data;
 
     yield put(
       StartVisitSuccess({
-        id: 1,
-        name: 'Cliente de Teste',
-        started_at: new Date(),
-        visit: 'jefte.justino@gmail.comn',
+        id,
+        name: pessoa,
+        started_at: data_inicio,
+        endereco: endereco_completo,
       }),
     );
 
@@ -67,16 +95,30 @@ export function* StartVisit({payload}) {
 }
 
 export function* StopVisit({payload}) {
-  yield requestPermissionLocation();
+  const permission = yield requestPermissionLocation();
+
+  if (!permission) {
+    yield put(StopVisitFailure());
+    Alert.alert(
+      'Falha ao Iniciar Visita!',
+      'ocorreu um erro, tente novamente mais tarde!',
+    );
+  }
 
   try {
-    Geolocation.getCurrentPosition(
-      position => {},
-      error => {
-        // See error code charts below.
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+    const {getLocation} = yield call(userPositionPromised);
+    const {error, location} = yield call(getLocation);
+
+    if (error) throw new Error(error);
+
+    const {obs, price} = payload;
+    const data = {
+      obs,
+      price,
+      ...location,
+    };
+
+    yield call(api.post, 'visita/finalizar', data);
 
     yield put(StopVisitSuccess());
 
@@ -84,7 +126,7 @@ export function* StopVisit({payload}) {
   } catch (error) {
     yield put(StopVisitFailure());
     Alert.alert(
-      'Falha ao Parar Visita',
+      'Falha ao Finalizar Visita',
       'ocorreu um erro, tente novamente mais tarde!',
     );
   }

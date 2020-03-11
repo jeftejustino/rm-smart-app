@@ -22,6 +22,11 @@ export const ItemName = styled.Text`
   font-weight: bold;
 `;
 
+export const ItemAddress = styled.Text`
+  font-size: 12px;
+  padding: 0px 15px 10px;
+`;
+
 export const ItemDate = styled.Text`
   font-size: 12px;
   padding: 0px 15px 10px;
