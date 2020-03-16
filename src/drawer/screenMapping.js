@@ -15,6 +15,7 @@ import ActivityList from '~/pages/Activity/List';
 import ActivityForm from '~/pages/Activity/Form';
 import ActivityUpdate from '~/pages/Activity/Update';
 import Notification from '~/pages/Notification';
+import BusinessList from '~/pages/Business/List';
 
 import Header from '~/components/Header';
 
@@ -104,6 +105,20 @@ export default function screenMapping() {
       ),
       navigationOptions: {
         title: `Visitas`,
+      },
+    },
+
+    Business: {
+      screen: createStackNavigator(
+        {
+          BusinessList,
+        },
+        {
+          defaultNavigationOptions: Header,
+        },
+      ),
+      navigationOptions: {
+        title: `Negócios`,
       },
     },
 

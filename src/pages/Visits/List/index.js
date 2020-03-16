@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {format, parseISO, lastDayOfMonth, formatDistance} from 'date-fns';
 import pt from 'date-fns/locale/pt';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import DatePicker from '~/components/DatePicker';
 
@@ -21,13 +20,23 @@ import {
   ItemHeader,
   ItemName,
   ItemContent,
-  ItemDate,
-  ItemStart,
-  ItemEnd,
   ItemAtvDate,
   ItemAtvAddress,
-  ItemAddress,
-  ItemDisctance,
+  ItemDistance,
+  ItemAtvDT,
+  ItemAtvDTTitle,
+  ItemAtvDTDate,
+  ItemAtvTime,
+  ItemAtvAddressTitle,
+  ItemVisit,
+  ItemCheckin,
+  ItemCheckinTitle,
+  ItemCheckinDate,
+  ItemCheckout,
+  ItemCheckoutTitle,
+  ItemCheckoutDate,
+  ItemDistanceTitle,
+  ItemDistanceTime,
 } from './styles';
 
 import ActionButton from '~/components/ActionButton';
@@ -115,7 +124,17 @@ export default function VisitList({navigation}) {
               item.atv_hora,
               item.atv_minuto,
             ),
-            "dd/LL/Y 'às' HH:mm",
+            'dd/LL/Y',
+          ),
+          atv_time_formatted: format(
+            new Date(
+              atv_date[0],
+              atv_date[1],
+              atv_date[2],
+              item.atv_hora,
+              item.atv_minuto,
+            ),
+            'HH:mm',
           ),
         };
       });
@@ -225,20 +244,40 @@ export default function VisitList({navigation}) {
               <ItemName>{item.name}</ItemName>
             </ItemHeader>
             <ItemContent>
-              <ItemAtvDate>
-                Agendado para: {item.atv_date_formatted}
-              </ItemAtvDate>
+              <ItemAtvDT>
+                <ItemAtvDate>
+                  <ItemAtvDTTitle>Agendado para:</ItemAtvDTTitle>
+                  <ItemAtvDTDate>{item.atv_date_formatted}</ItemAtvDTDate>
+                </ItemAtvDate>
+                <ItemAtvTime>
+                  <ItemAtvDTTitle>Horário:</ItemAtvDTTitle>
+                  <ItemAtvDTDate>{item.atv_time_formatted}</ItemAtvDTDate>
+                </ItemAtvTime>
+              </ItemAtvDT>
               <ItemAtvAddress>
-                <Icon name="map-marker" /> {item.atv_endereco}
+                <ItemAtvAddressTitle>Endereço:</ItemAtvAddressTitle>{' '}
+                {item.atv_endereco}
               </ItemAtvAddress>
-              <ItemDate>
-                <ItemStart>Inicio: {item.start_at_formatted}</ItemStart>
-                <ItemEnd>Fim: {item.end_at_formatted}</ItemEnd>
-              </ItemDate>
-              <ItemDisctance>Duração: {item.interval}</ItemDisctance>
-              <ItemAddress>
-                <Icon name="map-marker" /> {item.address}
-              </ItemAddress>
+            </ItemContent>
+            <ItemContent>
+              <ItemVisit>
+                <ItemCheckin>
+                  <ItemCheckinTitle>Check-in</ItemCheckinTitle>
+                  <ItemCheckinDate>{item.start_at_formatted}</ItemCheckinDate>
+                </ItemCheckin>
+                <ItemCheckout>
+                  <ItemCheckoutTitle>Check-in</ItemCheckoutTitle>
+                  <ItemCheckoutDate>{item.end_at_formatted}</ItemCheckoutDate>
+                </ItemCheckout>
+                <ItemDistance>
+                  <ItemDistanceTitle>Duração:</ItemDistanceTitle>
+                  <ItemDistanceTime>{item.interval}</ItemDistanceTime>
+                </ItemDistance>
+              </ItemVisit>
+              <ItemAtvAddress>
+                <ItemAtvAddressTitle>Endereço:</ItemAtvAddressTitle>{' '}
+                {item.address}
+              </ItemAtvAddress>
             </ItemContent>
           </Item>
         )}

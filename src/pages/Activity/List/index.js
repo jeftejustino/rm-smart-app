@@ -93,10 +93,16 @@ export default function ActivityList({navigation}) {
       setTotal(response.headers.total);
 
       const data = response.data.map(item => {
-        const itemData =
-          parseInt(item.realizado, 10) !== 0
-            ? parseISO(item.finalizado)
-            : setMinutes(setHours(parseISO(item.data), item.hora), item.minuto);
+        let itemData = parseISO(item.cadastro);
+        if (item.data !== '0000-00-00') {
+          itemData =
+            parseInt(item.realizado, 10) !== 0
+              ? parseISO(item.finalizado)
+              : setMinutes(
+                  setHours(parseISO(item.data), item.hora),
+                  item.minuto,
+                );
+        }
         const interval = {
           start: parseISO(item.cadastro),
           end: itemData,

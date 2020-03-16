@@ -9,16 +9,19 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 import DatePicker from '~/components/DatePicker';
 
+import {Container, List, HeaderTitle, Item} from './styles';
 import {
-  Container,
-  List,
-  HeaderTitle,
-  Item,
   ItemContent,
   ItemName,
-  ItemDate,
-  ItemAddress,
-} from './styles';
+  ItemHeader,
+  ItemAtvDT,
+  ItemAtvDate,
+  ItemAtvDTTitle,
+  ItemAtvTime,
+  ItemAtvDTDate,
+  ItemAtvAddress,
+  ItemAtvAddressTitle,
+} from '../List/styles';
 
 import {StartVisitRequest} from '~/store/modules/visit/actions';
 
@@ -79,7 +82,8 @@ export default function VisitNew({navigation}) {
           id: item.id,
           name: nome_pessoa,
           endereco: item.endereco,
-          date_at_formatted: format(itemData, "dd/LL/Y 'às' HH:mm"),
+          atv_date_formatted: format(itemData, 'dd/LL/Y'),
+          atv_time_formatted: format(itemData, 'HH:mm'),
         };
       });
 
@@ -153,16 +157,24 @@ export default function VisitNew({navigation}) {
         keyExtractor={item => String(item.id)}
         renderItem={({item, index}) => (
           <Item index={index} onPress={() => startVisit(item)}>
-            <ItemContent>
+            <ItemHeader>
               <ItemName>{item.name}</ItemName>
-              <ItemAddress>
-                <Icon name="map-marker" size={12} color="#333" />{' '}
+            </ItemHeader>
+            <ItemContent>
+              <ItemAtvDT>
+                <ItemAtvDate>
+                  <ItemAtvDTTitle>Agendado para:</ItemAtvDTTitle>
+                  <ItemAtvDTDate>{item.atv_date_formatted}</ItemAtvDTDate>
+                </ItemAtvDate>
+                <ItemAtvTime>
+                  <ItemAtvDTTitle>Horário:</ItemAtvDTTitle>
+                  <ItemAtvDTDate>{item.atv_time_formatted}</ItemAtvDTDate>
+                </ItemAtvTime>
+              </ItemAtvDT>
+              <ItemAtvAddress>
+                <ItemAtvAddressTitle>Endereço:</ItemAtvAddressTitle>{' '}
                 {item.endereco}
-              </ItemAddress>
-              <ItemDate>
-                <Icon name="clock-outline" size={12} color="#333" />{' '}
-                {item.date_at_formatted}
-              </ItemDate>
+              </ItemAtvAddress>
             </ItemContent>
           </Item>
         )}

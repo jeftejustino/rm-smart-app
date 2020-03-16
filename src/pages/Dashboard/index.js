@@ -58,17 +58,23 @@ export default function Dashboard() {
 
   return (
     <Container>
-      <Chart>
-        <Views info={views} />
-      </Chart>
+      {views && (
+        <Chart>
+          <Views info={views} />
+        </Chart>
+      )}
 
-      <Chart>
-        <People info={people} />
-      </Chart>
+      {people && (
+        <Chart>
+          <People info={people} />
+        </Chart>
+      )}
 
-      <Chart>
-        <Business info={business} />
-      </Chart>
+      {business && (
+        <Chart>
+          <Business info={business} />
+        </Chart>
+      )}
     </Container>
   );
 }
