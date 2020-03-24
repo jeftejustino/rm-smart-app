@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import MultiSelectAjax from '~/components/MultiSelectAjax';
 
-import {Container, Products, Item, Name, Input} from './styles';
-import Custom from '../Custom';
+import {Container, Item, Name, Label, Input} from './styles';
+import Custom from './Custom';
 
 export default function BusinessProducts({
   onChange,
@@ -32,13 +32,8 @@ export default function BusinessProducts({
   function handleChangeQtd(item, value) {
     const vls2 = products;
     const index = products.findIndex(i => i.id === item.id);
-    // if (!value) value = 1;
-    // const numero2 = value.match(/\d+/g).map(Number);
-    // console.tron.log(numero2);
     const numero = parseInt(value, 10);
-    console.tron.log(value);
-    console.tron.log(numero);
-    vls2[index].quantity = numero;
+    vls2[index].quantity = String(numero);
     setProducts(vls2);
     setJson(JSON.stringify(vls2));
     onChange(vls2);
@@ -73,45 +68,43 @@ export default function BusinessProducts({
         url="negocio/produtos"
       />
 
-      <Products
-        data={products}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <Item>
-            <Name>{item.nome}</Name>
+      {products.map(item => (
+        <Item key={String(item.id)}>
+          <Name>{item.nome}</Name>
+          <Label>Quantidade: </Label>
+          <Input
+            placeholder="Quantidade"
+            value={item.quantity || '0'}
+            keyboardType="numeric"
+            onChangeText={value => handleChangeQtd(item, value)}
+          />
 
-            <Input
-              placeholder="Quantidade"
-              value={item.quantity || '0'}
-              keyboardType="numeric"
-              onChangeText={value => handleChangeQtd(item, value)}
+          <Label>Valor: </Label>
+          <Input
+            placeholder="Valor"
+            value={item.price || '0,00'}
+            keyboardType="numeric"
+            onChangeText={value => handleChangePrice(item, value)}
+          />
+
+          {item.caracteristica && (
+            <Custom
+              options={item.caracteristica}
+              value={item.customValues || []}
+              type={2}
+              onValueChange={value => handleChange(item, value)}
             />
-
-            <Input
-              placeholder="Valor"
-              value={item.price || '0,00'}
-              keyboardType="numeric"
-              onChangeText={value => handleChangePrice(item, value)}
-            />
-
-            {item.caracteristica && (
-              <Custom
-                options={item.caracteristica}
-                value={item.customValues || []}
-                onChange={value => handleChange(item, value)}
-              />
-            )}
-          </Item>
-        )}
-      />
+          )}
+        </Item>
+      ))}
     </Container>
   );
 }
 
 BusinessProducts.propTypes = {
   onChange: PropTypes.func.isRequired,
-  defaultProducts: PropTypes.object,
-  defaultValues: PropTypes.oneOf([PropTypes.array, PropTypes.object]),
+  defaultProducts: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  defaultValues: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 BusinessProducts.defaultProps = {

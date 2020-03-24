@@ -2,23 +2,9 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View``;
 
-export const Products = styled.FlatList``;
+export const Label = styled.Text``;
 
-export const Item = styled.View`
-  background: #f5f5f5;
-  margin: 5px 0px;
-  padding: 15px;
-  border: 1px solid #ccc;
-`;
-
-export const Name = styled.Text`
-  font-size: 16px;
-  color: #000;
-`;
-export const Label = styled.Text`
-  font-size: 13px;
-  color: #000;
-`;
+export const Item = styled.View``;
 
 export const Input = styled.TextInput`
   background: #fff;

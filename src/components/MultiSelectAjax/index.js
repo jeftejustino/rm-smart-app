@@ -158,7 +158,7 @@ MultiSelectAjax.propTypes = {
   url: PropTypes.string.isRequired,
   onValueChange: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
-  defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  defaultValue: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 MultiSelectAjax.defaultProps = {

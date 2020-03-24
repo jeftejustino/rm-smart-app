@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, Alert} from 'react-native';
+import PropTypes from 'prop-types';
+import {format} from 'date-fns';
 
 import api from '~/services/api';
 import Button from '~/components/Button';
@@ -11,7 +13,7 @@ import {Container, Input, Content} from './styles';
 import Custom from './Custom';
 import Products from './Products';
 
-export default function New() {
+export default function New({navigation}) {
   const [building, setBuilding] = useState(true);
   const [responsibles, setResponsibles] = useState([]);
   const [custom, setCustom] = useState([]);
@@ -21,8 +23,12 @@ export default function New() {
   const [previsao, setPrevisao] = useState(new Date());
   const [responsible, setResponsible] = useState();
   const [pipeline, setPipeline] = useState(0);
+  const [price, setPrice] = useState('0,00');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [priceRecurrent, setPriceRecurrent] = useState('0,00');
   const [frequencia, setFrequencia] = useState(1);
-  const [products, setProducts] = useState([1, 2]);
+  const [products, setProducts] = useState([]);
 
   const frequencias = [
     {value: 1, label: 'Diária'},
@@ -34,6 +40,15 @@ export default function New() {
     {value: 7, label: 'Semestral'},
     {value: 8, label: 'Anual'},
   ];
+
+  function maskPrice(value) {
+    let numero = value.match(/\d+/g).map(Number);
+    numero = parseInt(numero.join(''), 10) / 100;
+    numero = numero.toFixed(2).split('.');
+    numero[0] = `${numero[0].split(/(?=(?:...)*$)/).join('.')}`;
+    numero = numero.join(',');
+    return numero;
+  }
 
   async function loadPipelines() {
     try {
@@ -101,20 +116,30 @@ export default function New() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleSubmit() {
-    // "id_assinante": "2242276",
-    // "empresa_assinante": "cliente_2242276",
-    // "confirmacao_menor_minimo": "imaginejefte123",
-    // "valor": "160,00",
-    // "recorrente_valor": "20,00",
-    // "recorrente_frequencia": "4",
-    // "nome": "descrição teste",
-    // "descricao": "",
-    // "previsao_visao": "19/03/2020",
-    // "previsao": "2020-03-19",
-    // "pipeline": "1",
-    // "user_para": "78",
-    // "substituir": "",
+  async function handleSubmit() {
+    setBuilding(true);
+    try {
+      await api.post(`negocio/create`, {
+        id_assinante: cliente,
+        valor: '160,00',
+        recorrente_valor: '20,00',
+        recorrente_frequencia: frequencia,
+        nome: name,
+        descricao: description,
+        previsao_visao: format(previsao, 'dd/LL/Y'),
+        previsao: format(previsao, 'Y-LL-dd'),
+        pipeline,
+        produtos: products,
+        personalizado: customValue,
+        user_para: responsible,
+      });
+      Alert.alert('Cadastro atualizado!');
+      navigation.navigate('CompanyList');
+    } catch (error) {
+      Alert.alert('Erro ao salvar!', error.response.data.error || '');
+    } finally {
+      setBuilding(false);
+    }
   }
 
   return (
@@ -133,13 +158,33 @@ export default function New() {
               url="pessoas"
             />
 
-            <Input placeholder="Valor" />
+            <Input
+              placeholder="Valor"
+              value={price}
+              keyboardType="decimal-pad"
+              onChangeText={value => setPrice(maskPrice(value))}
+            />
 
-            <Input placeholder="Valor Recorrente" />
+            <Input
+              placeholder="Valor Recorrente"
+              keyboardType="number-pad"
+              value={priceRecurrent}
+              onChangeText={value => setPriceRecurrent(maskPrice(value))}
+            />
 
-            <Input placeholder="nome" />
+            <Select
+              options={frequencias}
+              selectedValue={frequencia}
+              onValueChange={value => setFrequencia(value)}
+            />
 
-            <Input placeholder="descricao" />
+            <Input placeholder="nome" value={name} onChangeText={setName} />
+
+            <Input
+              placeholder="descricao"
+              value={description}
+              onChangeText={setDescription}
+            />
 
             <DatePicker
               enabledTime={false}
@@ -154,12 +199,6 @@ export default function New() {
             />
 
             <Select
-              options={frequencias}
-              selectedValue={frequencia}
-              onValueChange={value => setFrequencia(value)}
-            />
-
-            <Select
               options={responsibles}
               selectedValue={responsible}
               onValueChange={value => setResponsible(value)}
@@ -169,7 +208,8 @@ export default function New() {
               <Custom
                 options={custom[pipeline]}
                 value={customValue}
-                onChange={setCustomValue}
+                type={1}
+                onValueChange={setCustomValue}
               />
             )}
 
@@ -180,3 +220,7 @@ export default function New() {
     </Container>
   );
 }
+
+New.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
