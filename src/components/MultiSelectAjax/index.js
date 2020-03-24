@@ -15,17 +15,20 @@ import {
   InputSearch,
   Item,
   ItemText,
+  Selected,
 } from './styles';
 
 import api from '~/services/api';
 
-export default function SelectAjax({
+export default function MultiSelectAjax({
   defaultValue,
   defaultLabel,
   onValueChange,
   url,
   ...rest
 }) {
+  const [values, setValues] = useState([]);
+  const [qtd, setQtd] = useState();
   const [label, setLabel] = useState();
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState([]);
@@ -41,9 +44,18 @@ export default function SelectAjax({
   }
 
   function handleSelected(item) {
-    setLabel(item.name || item.email);
-    onValueChange(item.id);
-    setShowModal(false);
+    const dv = defaultValue;
+    const index = dv.findIndex(i => i.id === item.id);
+
+    if (index !== -1) {
+      dv.splice(index, 1);
+    } else {
+      dv.push(item);
+    }
+
+    setQtd(dv.length);
+    setValues(dv);
+    onValueChange(dv);
   }
 
   async function searchQuery() {
@@ -69,8 +81,17 @@ export default function SelectAjax({
 
   useEffect(() => {
     searchQuery();
+    console.tron.log(values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  useEffect(() => {
+    if (values.length) {
+      if (values.length === 1) setLabel(`${values.length} item Selecionado`);
+      else setLabel(`${values.length} itens Selecionados`);
+    } else setLabel(defaultLabel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qtd]);
 
   return (
     <Container>
@@ -81,8 +102,23 @@ export default function SelectAjax({
         <ModalContainer>
           <ModalContent>
             <InputSearch placeholder="Pesquisar..." onChangeText={setQuery} />
-
             <ModalOptions>
+              <Selected
+                data={values}
+                keyExtractor={item => String(item.id)}
+                renderItem={({item}) => (
+                  <>
+                    <Item
+                      active
+                      onPress={() => {
+                        handleSelected(item);
+                      }}>
+                      <ItemText>{item.nome || item.name}</ItemText>
+                    </Item>
+                  </>
+                )}
+              />
+
               {options.length ? (
                 <Options
                   ListHeaderComponent={() => (
@@ -91,12 +127,16 @@ export default function SelectAjax({
                   data={options}
                   keyExtractor={item => String(item.id)}
                   renderItem={({item}) => (
-                    <Item
-                      onPress={() => {
-                        handleSelected(item);
-                      }}>
-                      <ItemText>{item.name || item.email}</ItemText>
-                    </Item>
+                    <>
+                      {values.findIndex(i => i.id === item.id) === -1 && (
+                        <Item
+                          onPress={() => {
+                            handleSelected(item);
+                          }}>
+                          <ItemText>{item.nome || item.name}</ItemText>
+                        </Item>
+                      )}
+                    </>
                   )}
                 />
               ) : (
@@ -114,14 +154,14 @@ export default function SelectAjax({
   );
 }
 
-SelectAjax.propTypes = {
+MultiSelectAjax.propTypes = {
   url: PropTypes.string.isRequired,
   onValueChange: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
   defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
-SelectAjax.defaultProps = {
+MultiSelectAjax.defaultProps = {
   defaultLabel: '',
-  defaultValue: 0,
+  defaultValue: [],
 };

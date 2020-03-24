@@ -16,6 +16,7 @@ import ActivityForm from '~/pages/Activity/Form';
 import ActivityUpdate from '~/pages/Activity/Update';
 import Notification from '~/pages/Notification';
 import BusinessList from '~/pages/Business/List';
+import BusinessNew from '~/pages/Business/New';
 
 import Header from '~/components/Header';
 
@@ -112,6 +113,7 @@ export default function screenMapping() {
       screen: createStackNavigator(
         {
           BusinessList,
+          BusinessNew,
         },
         {
           defaultNavigationOptions: Header,

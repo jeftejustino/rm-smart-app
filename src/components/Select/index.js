@@ -6,9 +6,14 @@ export default function Select({options, ...rest}) {
   return (
     <Container>
       <Picker {...rest}>
-        {options.map(item => (
-          <Picker.Item value={item.value} key={item.value} label={item.label} />
-        ))}
+        {options &&
+          options.map(item => (
+            <Picker.Item
+              value={item.value}
+              key={item.value}
+              label={item.label}
+            />
+          ))}
       </Picker>
     </Container>
   );

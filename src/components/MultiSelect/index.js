@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Modal, ActivityIndicator} from 'react-native';
+import {Modal} from 'react-native';
 import {
   Container,
   Label,
@@ -12,25 +12,21 @@ import {
   ModalOptions,
   Options,
   NotFound,
-  InputSearch,
   Item,
   ItemText,
 } from './styles';
 
-import api from '~/services/api';
-
-export default function SelectAjax({
+export default function MultiSelect({
   defaultValue,
   defaultLabel,
   onValueChange,
-  url,
+  options,
   ...rest
 }) {
   const [label, setLabel] = useState();
-  const [query, setQuery] = useState('');
-  const [options, setOptions] = useState([]);
+  const [values, setValues] = useState(defaultValue);
+  const [qtd, setQtd] = useState(defaultValue.length);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   function handleOpenModal() {
     setShowModal(true);
@@ -41,36 +37,25 @@ export default function SelectAjax({
   }
 
   function handleSelected(item) {
-    setLabel(item.name || item.email);
-    onValueChange(item.id);
-    setShowModal(false);
-  }
-
-  async function searchQuery() {
-    setLoading(true);
-    try {
-      const response = await api.post(url, {nome: query});
-      setOptions(response.data);
-    } catch (error) {
-      // error
-    } finally {
-      setLoading(false);
+    const dv = defaultValue;
+    if (dv.includes(item.value)) {
+      const index = dv.indexOf(item.value);
+      dv.splice(index, 1);
+    } else {
+      dv.push(item.value);
     }
+    setQtd(dv.length);
+    setValues(dv);
+    onValueChange(dv);
   }
 
   useEffect(() => {
-    onValueChange(defaultValue);
+    if (values.length) {
+      if (values.length === 1) setLabel(`${values.length} item Selecionado`);
+      else setLabel(`${values.length} itens Selecionados`);
+    } else setLabel(defaultLabel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    setLabel(defaultLabel);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultLabel]);
-
-  useEffect(() => {
-    searchQuery();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [qtd]);
 
   return (
     <Container>
@@ -80,22 +65,19 @@ export default function SelectAjax({
       <Modal visible={showModal} transparent>
         <ModalContainer>
           <ModalContent>
-            <InputSearch placeholder="Pesquisar..." onChangeText={setQuery} />
-
             <ModalOptions>
               {options.length ? (
                 <Options
-                  ListHeaderComponent={() => (
-                    <>{loading && <ActivityIndicator />}</>
-                  )}
+                  ListHeaderComponent={() => <></>}
                   data={options}
-                  keyExtractor={item => String(item.id)}
+                  keyExtractor={item => String(item.value)}
                   renderItem={({item}) => (
                     <Item
+                      active={values && values.includes(item.value)}
                       onPress={() => {
                         handleSelected(item);
                       }}>
-                      <ItemText>{item.name || item.email}</ItemText>
+                      <ItemText>{item.label}</ItemText>
                     </Item>
                   )}
                 />
@@ -105,7 +87,7 @@ export default function SelectAjax({
             </ModalOptions>
 
             <CloseModal onPress={() => handleCloseModal()}>
-              <CloseModalText>Fechar</CloseModalText>
+              <CloseModalText>OK</CloseModalText>
             </CloseModal>
           </ModalContent>
         </ModalContainer>
@@ -114,14 +96,15 @@ export default function SelectAjax({
   );
 }
 
-SelectAjax.propTypes = {
-  url: PropTypes.string.isRequired,
+MultiSelect.propTypes = {
+  options: PropTypes.array,
   onValueChange: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
-  defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  defaultValue: PropTypes.array,
 };
 
-SelectAjax.defaultProps = {
+MultiSelect.defaultProps = {
   defaultLabel: '',
-  defaultValue: 0,
+  defaultValue: [],
+  options: [],
 };
