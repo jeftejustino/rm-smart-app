@@ -6,6 +6,7 @@ import {Container, Actions, Filter, Info, List, Item} from './styles';
 
 import ActionButton from '~/components/ActionButton';
 import Input from '~/components/Input';
+import Select from '~/components/Select';
 import Button from '~/components/Button';
 import api from '~/services/api';
 
@@ -14,6 +15,7 @@ import ItemList from './item';
 export default function PeopleList({navigation}) {
   const [filterHeight] = useState(new Animated.Value(0));
   const [filterActive, setFilterActive] = useState(false);
+  const [filterType, setFilterType] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [total, setTotal] = useState(0);
@@ -29,6 +31,21 @@ export default function PeopleList({navigation}) {
   const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
 
+  const types = [
+    {
+      value: '',
+      label: 'Todos',
+    },
+    {
+      value: 'lead',
+      label: 'Leads',
+    },
+    {
+      value: 'cliente',
+      label: 'Clientes',
+    },
+  ];
+
   async function getData(refresh) {
     if (loadingMore) return false;
     if (people.length >= total && total !== 0 && !refresh) return false;
@@ -40,6 +57,7 @@ export default function PeopleList({navigation}) {
           max,
           nome: filterName,
           email: filterEmail,
+          tipo: filterType,
         },
       });
       setTotal(response.headers.total);
@@ -84,7 +102,7 @@ export default function PeopleList({navigation}) {
       }).start();
     } else {
       Animated.timing(filterHeight, {
-        toValue: 250,
+        toValue: 330,
         duration: 500,
       }).start();
     }
@@ -162,6 +180,11 @@ export default function PeopleList({navigation}) {
                   placeholder="Email da Pessoa"
                   value={filterEmail}
                   onChangeText={setFilterEmail}
+                />
+                <Select
+                  options={types}
+                  selectedValue={filterType}
+                  onValueChange={value => setFilterType(value)}
                 />
 
                 <Button
