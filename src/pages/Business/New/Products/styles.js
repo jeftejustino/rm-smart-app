@@ -15,9 +15,17 @@ export const Name = styled.Text`
   font-size: 16px;
   color: #000;
 `;
+
 export const Label = styled.Text`
   font-size: 13px;
   color: #000;
+  margin-right: 10px;
+`;
+
+export const Div = styled.View`
+  flex-direction: row;
+  margin-top: 10px;
+  align-items: center;
 `;
 
 export const Input = styled.TextInput`

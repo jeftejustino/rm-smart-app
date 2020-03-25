@@ -81,7 +81,6 @@ export default function MultiSelectAjax({
 
   useEffect(() => {
     searchQuery();
-    console.tron.log(values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 

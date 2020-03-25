@@ -55,8 +55,6 @@ export default function PeopleList({navigation}) {
       if (refresh) {
         setPeople(data);
       } else {
-        console.tron.warn(people);
-        console.tron.warn(data);
         setPeople([...people, ...data]);
       }
     } catch (error) {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import MultiSelectAjax from '~/components/MultiSelectAjax';
 
-import {Container, Item, Name, Label, Input} from './styles';
+import {Container, Item, Name, Label, Input, Div} from './styles';
 import Custom from './Custom';
 
 export default function BusinessProducts({
@@ -32,6 +32,7 @@ export default function BusinessProducts({
   function handleChangeQtd(item, value) {
     const vls2 = products;
     const index = products.findIndex(i => i.id === item.id);
+    if (!value) value = 0;
     const numero = parseInt(value, 10);
     vls2[index].quantity = String(numero);
     setProducts(vls2);
@@ -48,7 +49,6 @@ export default function BusinessProducts({
     numero[0] = `${numero[0].split(/(?=(?:...)*$)/).join('.')}`;
     numero = numero.join(',');
     vls2[index].price = numero;
-    console.tron.log(numero);
     setProducts(vls2);
     setJson(JSON.stringify(vls2));
     onChange(vls2);
@@ -71,21 +71,27 @@ export default function BusinessProducts({
       {products.map(item => (
         <Item key={String(item.id)}>
           <Name>{item.nome}</Name>
-          <Label>Quantidade: </Label>
-          <Input
-            placeholder="Quantidade"
-            value={item.quantity || '0'}
-            keyboardType="numeric"
-            onChangeText={value => handleChangeQtd(item, value)}
-          />
+          <Div>
+            <Label>Quantidade: </Label>
+            <Input
+              style={{flexGrow: 1}}
+              placeholder="Quantidade"
+              value={item.quantity || '0'}
+              keyboardType="numeric"
+              onChangeText={value => handleChangeQtd(item, value)}
+            />
+          </Div>
 
-          <Label>Valor: </Label>
-          <Input
-            placeholder="Valor"
-            value={item.price || '0,00'}
-            keyboardType="numeric"
-            onChangeText={value => handleChangePrice(item, value)}
-          />
+          <Div>
+            <Label>Valor: </Label>
+            <Input
+              style={{flexGrow: 1}}
+              placeholder="Valor"
+              value={item.price || '0,00'}
+              keyboardType="numeric"
+              onChangeText={value => handleChangePrice(item, value)}
+            />
+          </Div>
 
           {item.caracteristica && (
             <Custom
